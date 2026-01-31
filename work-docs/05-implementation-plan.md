@@ -33,7 +33,8 @@ M5: テスト/CI が最低限回る
 - [x] Commit 0: `chore: add mise toolchain (node/pnpm)`
 - [x] Commit 1: `chore: init astro project (ts, pnpm)`
 - [x] Commit 2: `chore: add lint/format/typecheck scripts`
-- [ ] Commit 3: `feat: add base layout + global styles`
+- [x] Commit 3: `feat: add base layout + global styles`
+- [ ] Commit 4: `feat: add works data model and /works page`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 

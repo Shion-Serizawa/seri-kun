@@ -1,0 +1,102 @@
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  padding: 0.9rem 0.9rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.media {
+  display: block;
+  border-radius: calc(var(--radius) - 0.25rem);
+  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 0.55rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  filter: saturate(0.98) contrast(1.02);
+  transition:
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+.mediaOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    color-mix(in srgb, var(--bg) 28%, transparent) 65%,
+    color-mix(in srgb, var(--bg) 55%, transparent) 100%
+  );
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.media:hover .image {
+  transform: scale(1.03);
+  filter: saturate(1.05) contrast(1.03);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+}
+
+.cardDesc {
+  margin: 0.25rem 0 0.85rem;
+  color: color-mix(in srgb, var(--fg) 84%, transparent);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: color-mix(in srgb, var(--bg) 65%, transparent);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.link {
+  color: var(--link);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

@@ -8,3 +8,6 @@ mise.local.toml
 .mise.local.toml
 mise.*.local.toml
 .mise.*.local.toml
+
+# 一旦活用していないので、コミットしない。
+work-docs/codex-skills/

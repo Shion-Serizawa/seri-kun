@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { works } from '../data/works';
+import WorkCard from '../components/WorkCard.astro';
+import styles from './works.module.css';
+---
+
+<BaseLayout title="Works | seri-kun" description="制作物一覧">
+  <h1>Works</h1>
+  <p class={styles.intro}>
+    これまでに作ったものの一覧です。気になったらリンクから詳細（GitHub / 公開URL）へ。
+  </p>
+
+  <section class={styles.grid} aria-label="Works list">
+    {works.map((work) => <WorkCard work={work} />)}
+  </section>
+</BaseLayout>
