@@ -68,12 +68,15 @@
     transform 180ms ease;
 }
 
-.navLink:hover {
+.navLink:hover,
+.navLink:focus-visible {
   color: var(--fg);
   background: color-mix(in srgb, var(--surface) 55%, transparent);
+  outline: none;
 }
 
-.navLink:hover::after {
+.navLink:hover::after,
+.navLink:focus-visible::after {
   opacity: 0.9;
   transform: translateY(0);
 }
