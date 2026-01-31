@@ -1,0 +1,12 @@
+[tools]
+# Astro v5 の要件を満たす安定ライン
+node = "20"
+pnpm = "9"
+
+[env]
+# 任意: Cloudflare Web Analytics の token（公開情報。未設定でも動作する想定）
+PUBLIC_CF_ANALYTICS_TOKEN = { required = false }
+
+# 注:
+# - `mise` は安全のため、この `mise.toml` を最初は untrusted 扱いにすることがある
+# - 初回だけ `mise trust`（または `mise trust --yes`）が必要になる場合がある

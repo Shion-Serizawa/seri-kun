@@ -1,0 +1,9 @@
+[env]
+# ローカル専用の上書き（このファイルは `mise.local.toml` として作成し、Git 管理しない）
+#
+# PUBLIC_* はブラウザに露出するためシークレットにしない
+# PUBLIC_CF_ANALYTICS_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxx"
+#
+# シークレット（例: デプロイ用の Cloudflare API Token 等）は、基本は GitHub Secrets/Cloudflare 側で管理し、
+# ローカルで必要なときだけここに置く
+# CLOUDFLARE_API_TOKEN = "..."

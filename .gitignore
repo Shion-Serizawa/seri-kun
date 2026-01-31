@@ -1,0 +1,10 @@
+# env / secrets
+.env
+.env.*
+.dev.vars
+
+# mise (local overrides)
+mise.local.toml
+.mise.local.toml
+mise.*.local.toml
+.mise.*.local.toml
