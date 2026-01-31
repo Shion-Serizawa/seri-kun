@@ -1,0 +1,104 @@
+.hero {
+  padding: 1.75rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background:
+    radial-gradient(700px 220px at 20% 0%, rgba(156, 209, 255, 0.18), transparent 65%),
+    radial-gradient(600px 240px at 80% 10%, rgba(185, 255, 181, 0.16), transparent 62%);
+  opacity: 1;
+  pointer-events: none;
+}
+
+.hero > * {
+  position: relative;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+
+.lead {
+  max-width: 55ch;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--fg) 84%, transparent);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.6rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  transition:
+    transform 140ms ease,
+    background 140ms ease,
+    border-color 140ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.primary {
+  color: color-mix(in srgb, var(--bg) 92%, transparent);
+  background: linear-gradient(135deg, var(--link), var(--accent));
+  border-color: color-mix(in srgb, var(--fg) 18%, transparent);
+}
+
+.ghost {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  color: var(--fg);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.35rem;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: color-mix(in srgb, var(--bg) 65%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  .btn:hover {
+    transform: none;
+  }
+}

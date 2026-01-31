@@ -1,0 +1,129 @@
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+}
+
+.siteTitle {
+  display: inline-flex;
+  gap: 0.6rem;
+  align-items: center;
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.siteTitleWord {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.siteTitleMark {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, var(--accent), var(--link));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--fg) 18%, transparent),
+    0 8px 26px rgba(0, 0, 0, 0.25);
+}
+
+.nav {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.15rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--link) 70%, transparent);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.navLink:hover {
+  color: var(--fg);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+}
+
+.navLink:hover::after {
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+.main {
+  padding-block: 2rem;
+  min-height: 60vh;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding-block: 1.25rem;
+  color: var(--muted);
+}
+
+.footerInner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.visits {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.visitsLabel {
+  color: var(--muted);
+}
+
+.visitsValue {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.analyticsNote {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 48rem) {
+  .footerInner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navLink::after {
+    transition: none;
+  }
+}
