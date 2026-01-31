@@ -32,6 +32,7 @@ M5: テスト/CI が最低限回る
 進捗:
 - [x] Commit 0: `chore: add mise toolchain (node/pnpm)`
 - [x] Commit 1: `chore: init astro project (ts, pnpm)`
+- [ ] Commit 2: `chore: add lint/format/typecheck scripts`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 

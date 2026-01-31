@@ -39,6 +39,14 @@ mise exec -- pnpm -C apps/web build
 
 `apps/web/dist/` が生成されれば OK です（静的出力）。
 
+### 2.5) 型チェック（公式推奨）
+
+```sh
+mise exec -- pnpm -C apps/web typecheck
+```
+
+`astro build` 自体は型チェックを行わないため、CI/ローカルで明示的に `astro check`（このリポジトリでは `typecheck`）を実行します。
+
 ### 3) ビルド成果物のプレビュー
 
 ```sh
