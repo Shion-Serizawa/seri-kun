@@ -110,6 +110,7 @@ M5: テスト/CI が最低限回る
 主な変更（例）:
 - `apps/web/src/data/works.ts`
 - `apps/web/src/pages/works.astro`
+- `apps/web/src/components/works/WorkCard.astro`
 
 参照:
 - `work-docs/01-page-spec.md`（/works の要件）

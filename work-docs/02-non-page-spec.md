@@ -31,6 +31,23 @@ docs/               確定したドキュメント（必要になったら）
 - Astro は `output: 'static'` を維持する（サイト本体は静的配信）
 - 動的処理は Cloudflare Pages Functions に寄せる
 
+### 0.1 `apps/web/src` の内部戦略（レイヤー維持 + ドメインで束ねる）
+
+前提:
+- Astro の都合（ルーティング/レイアウト/Content Collections）に沿って、`src/pages`, `src/layouts`, `src/content`, `src/generated` などの **レイヤーは崩さない**
+- 一方で、UI 部品やロジックは “変更理由” の単位（ドメイン）でまとまっていた方が保守しやすい
+  - このプロジェクトでは特に `blog` が増えやすい想定のため、`blog` 関連は初期から寄せる
+
+推奨:
+- `src/components/` はドメイン別サブディレクトリを基本にする
+  - `src/components/blog/*`: Blog 専用 UI
+  - `src/components/works/*`: Works 専用 UI
+  - `src/components/shared/*`: 複数ページ/複数ドメインで使う共通 UI
+- `src/lib/` も同様にドメイン別サブディレクトリにする（純粋関数中心、ユニットテスト対象）
+  - `src/lib/blog/*`, `src/lib/works/*`, `src/lib/shared/*` など
+- `src/pages/` は “表示の組み立て” に寄せる（重い並び替え/グルーピング/パースは `src/lib` に逃がす）
+- `src/generated/` は直参照を避け、`src/lib` に 1 箇所ラッパを置いて集約する（参照点を固定する）
+
 ## 1. アクセスカウンター API
 
 ### 1.1 目的
