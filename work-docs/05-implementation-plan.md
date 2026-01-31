@@ -29,6 +29,10 @@ M5: テスト/CI が最低限回る
 
 ## 1. コミット計画
 
+進捗:
+- [x] Commit 0: `chore: add mise toolchain (node/pnpm)`
+- [x] Commit 1: `chore: init astro project (ts, pnpm)`
+
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
 - `mise.toml` を追加して Node/pnpm を固定する

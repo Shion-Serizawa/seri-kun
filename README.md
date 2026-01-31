@@ -18,3 +18,29 @@ cp mise.local.toml.example mise.local.toml
 注意:
 - `PUBLIC_*` はブラウザに露出するためシークレットにしない
 - `.env` / `.dev.vars` 等のシークレットは Git 管理しない（`.gitignore` 済み）
+
+## 動作確認（Commit 1 時点）
+
+Astro アプリは `apps/web` です（作業はリポジトリルートから行う前提）。
+
+### 1) 開発サーバー起動
+
+```sh
+mise exec -- pnpm -C apps/web dev
+```
+
+ブラウザで `http://localhost:4321/` を開き、トップページが表示されれば OK です。
+
+### 2) ビルド（SSG）
+
+```sh
+mise exec -- pnpm -C apps/web build
+```
+
+`apps/web/dist/` が生成されれば OK です（静的出力）。
+
+### 3) ビルド成果物のプレビュー
+
+```sh
+mise exec -- pnpm -C apps/web preview
+```
