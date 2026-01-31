@@ -1,0 +1,60 @@
+---
+import type { Work } from '../../data/works';
+import styles from './WorkCard.module.css';
+
+export type Props = {
+  work: Work;
+};
+
+const { work } = Astro.props;
+
+const { image, links } = work;
+const primaryHref = links?.url ?? links?.github;
+const hasMedia = Boolean(image);
+const isMediaLink = Boolean(image && primaryHref);
+const hasLinks = Boolean(links?.url || links?.github);
+
+const Media = isMediaLink ? 'a' : 'div';
+const mediaProps = isMediaLink
+  ? {
+      href: primaryHref,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    }
+  : {};
+---
+
+<article class={styles.card}>
+  {
+    hasMedia && image && (
+      <Media class={styles.media} {...mediaProps} aria-label={`${work.title} の画像`}>
+        <img class={styles.image} src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+        <span class={styles.mediaOverlay} aria-hidden="true" />
+      </Media>
+    )
+  }
+
+  <h2 class={styles.cardTitle}>{work.title}</h2>
+  <p class={styles.cardDesc}>{work.description}</p>
+
+  <ul class={styles.tags} aria-label="Tech stack">
+    {work.tech.map((t) => <li class={styles.tag}>{t}</li>)}
+  </ul>
+
+  {
+    hasLinks && (
+      <nav class={styles.links} aria-label="Links">
+        {links?.url && (
+          <a class={styles.link} href={links.url} target="_blank" rel="noopener noreferrer">
+            Visit
+          </a>
+        )}
+        {links?.github && (
+          <a class={styles.link} href={links.github} target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+        )}
+      </nav>
+    )
+  }
+</article>

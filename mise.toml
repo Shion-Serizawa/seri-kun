@@ -5,7 +5,11 @@ pnpm = "9"
 
 [env]
 # 任意: Cloudflare Web Analytics の token（公開情報。未設定でも動作する想定）
-PUBLIC_CF_ANALYTICS_TOKEN = { required = false }
+# mise の env テーブルは `value` などのキーを取る（未設定は空文字で扱い、必要なら `mise.local.toml` で上書きする）
+PUBLIC_CF_ANALYTICS_TOKEN = { value = "", redact = false }
+
+# Astro のテレメトリは無効化（CI/ローカルの再現性と、書き込み先の差分を減らす）
+ASTRO_TELEMETRY_DISABLED = { value = "1", redact = false }
 
 # 注:
 # - `mise` は安全のため、この `mise.toml` を最初は untrusted 扱いにすることがある

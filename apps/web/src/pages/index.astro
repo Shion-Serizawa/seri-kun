@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import styles from './index.module.css';
+---
+
+<BaseLayout title="Home | seri-kun" description="seri-kun のポートフォリオサイト">
+  <section class={styles.hero}>
+    <div class={styles.kicker}>Portfolio / Notes</div>
+    <h1>seri-kun</h1>
+    <p class={styles.lead}>
+      Astro（SSG）+ TypeScript。静的に、速く、読めるものを作る。動的処理は必要最小限だけ
+      `/api/*`（Pages Functions）へ。
+    </p>
+
+    <div class={styles.cta}>
+      <a class={`${styles.btn} ${styles.primary}`} href="/works">Works を見る</a>
+      <a class={`${styles.btn} ${styles.ghost}`} href="/blog">Blog を読む</a>
+    </div>
+
+    <div class={styles.meta}>
+      <div class={styles.chip}>SSG-first</div>
+      <div class={styles.chip}>TypeScript (strict)</div>
+      <div class={styles.chip}>Cloudflare Pages</div>
+    </div>
+  </section>
+</BaseLayout>

@@ -29,6 +29,13 @@ M5: テスト/CI が最低限回る
 
 ## 1. コミット計画
 
+進捗:
+- [x] Commit 0: `chore: add mise toolchain (node/pnpm)`
+- [x] Commit 1: `chore: init astro project (ts, pnpm)`
+- [x] Commit 2: `chore: add lint/format/typecheck scripts`
+- [x] Commit 3: `feat: add base layout + global styles`
+- [ ] Commit 4: `feat: add works data model and /works page`
+
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
 - `mise.toml` を追加して Node/pnpm を固定する
@@ -103,6 +110,7 @@ M5: テスト/CI が最低限回る
 主な変更（例）:
 - `apps/web/src/data/works.ts`
 - `apps/web/src/pages/works.astro`
+- `apps/web/src/components/works/WorkCard.astro`
 
 参照:
 - `work-docs/01-page-spec.md`（/works の要件）

@@ -1,0 +1,12 @@
+---
+import type { Work } from '../data/works';
+import WorkCardInner from './works/WorkCard.astro';
+
+export type Props = {
+  work: Work;
+};
+
+const { work } = Astro.props;
+---
+
+<WorkCardInner work={work} />
