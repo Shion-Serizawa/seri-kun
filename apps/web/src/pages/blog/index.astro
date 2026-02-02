@@ -1,0 +1,143 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  groupBlogPostsByMonth,
+  listBlogTags,
+  sortBlogListNewestFirst,
+  type BlogListItem,
+} from '../../lib/blog/blog-list';
+import styles from './index.module.css';
+
+const entries = await getCollection('blog', ({ data }) => !data.draft);
+
+const posts: BlogListItem[] = entries.map((entry) => ({
+  slug: entry.slug,
+  title: entry.data.title,
+  publishedAt: entry.data.publishedAt,
+  tags: entry.data.tags,
+  description: entry.data.description,
+}));
+
+const sorted = sortBlogListNewestFirst(posts);
+const groups = groupBlogPostsByMonth(sorted);
+const tags = listBlogTags(sorted);
+---
+
+<BaseLayout title="Blog | seri-kun" description="ブログ一覧">
+  <h1>Blog</h1>
+  <p class={styles.intro}>メモ、設計、学び。</p>
+
+  <section class={styles.controls} aria-label="Blog filters">
+    <div class={styles.tags} role="list" aria-label="Tags">
+      <a class={styles.tagLink} href="/blog" data-tag-link data-tag="" role="listitem">
+        All
+      </a>
+      {tags.map((tag) => (
+        <a
+          class={styles.tagLink}
+          href={`/blog?tag=${encodeURIComponent(tag)}`}
+          data-tag-link
+          data-tag={tag}
+          role="listitem"
+        >
+          #{tag}
+        </a>
+      ))}
+    </div>
+    <div class={styles.status} id="blog-status" aria-live="polite"></div>
+  </section>
+
+  <p class={styles.empty} id="blog-empty" hidden>該当する記事がありません。</p>
+
+  <div class={styles.groups} id="blog-groups">
+    {groups.map((group) => (
+      <section class={styles.month} data-month-group data-month={group.month}>
+        <h2 class={styles.monthTitle}>{group.month}</h2>
+        <ul class={styles.list} aria-label={`Posts in ${group.month}`}>
+          {group.posts.map((post) => (
+            <li
+              class={styles.item}
+              data-post
+              data-tags={post.tags.join(',')}
+              data-published-at={post.publishedAt}
+            >
+              <a class={styles.card} href={`/blog/${post.slug}`}>
+                <div class={styles.cardHead}>
+                  <div class={styles.cardTitle}>{post.title}</div>
+                  <time class={styles.cardDate} datetime={post.publishedAt}>
+                    {post.publishedAt}
+                  </time>
+                </div>
+                <p class={styles.cardDesc}>{post.description}</p>
+                {post.tags.length ? (
+                  <div class={styles.cardTags} aria-label="Tags">
+                    {post.tags.map((tag) => (
+                      <span class={styles.tagChip}>#{tag}</span>
+                    ))}
+                  </div>
+                ) : null}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <script is:inline define:vars={{ knownTags: tags }}>
+    const statusEl = document.getElementById('blog-status');
+    const emptyEl = document.getElementById('blog-empty');
+
+    function getSelectedTag() {
+      const params = new URLSearchParams(window.location.search);
+      const tag = params.get('tag');
+      if (!tag) return null;
+      if (!knownTags.includes(tag)) return null;
+      return tag;
+    }
+
+    function setActiveTag(selectedTag) {
+      const links = document.querySelectorAll('[data-tag-link]');
+      for (const link of links) {
+        const tag = link.getAttribute('data-tag');
+        const isActive = (tag === '' && !selectedTag) || tag === selectedTag;
+        if (isActive) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      }
+    }
+
+    function applyFilter() {
+      const selectedTag = getSelectedTag();
+      setActiveTag(selectedTag);
+
+      const months = document.querySelectorAll('[data-month-group]');
+      let visibleCount = 0;
+
+      for (const monthEl of months) {
+        const posts = monthEl.querySelectorAll('[data-post]');
+        let monthVisible = 0;
+
+        for (const postEl of posts) {
+          const raw = postEl.getAttribute('data-tags') || '';
+          const tags = raw ? raw.split(',').filter(Boolean) : [];
+          const visible = !selectedTag || tags.includes(selectedTag);
+
+          postEl.hidden = !visible;
+          if (visible) monthVisible += 1;
+        }
+
+        monthEl.hidden = monthVisible === 0;
+        visibleCount += monthVisible;
+      }
+
+      emptyEl.hidden = visibleCount !== 0;
+
+      if (selectedTag) statusEl.textContent = `Tag: #${selectedTag} (${visibleCount}件)`;
+      else statusEl.textContent = `${visibleCount}件`;
+    }
+
+    applyFilter();
+    window.addEventListener('popstate', applyFilter);
+  </script>
+</BaseLayout>
