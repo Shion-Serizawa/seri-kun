@@ -86,3 +86,14 @@
     padding: 1rem;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .article,
+  .tag,
+  .content :global(pre),
+  .content :global(code),
+  .content :global(blockquote) {
+    animation: none !important;
+    transition: none !important;
+  }
+}

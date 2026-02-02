@@ -8,6 +8,7 @@ import {
   type BlogListItem,
 } from '../../lib/blog/blog-list';
 import styles from './index.module.css';
+import blogFilterScriptUrl from '../../lib/blog/blog-filter.client.ts?url';
 
 const entries = await getCollection('blog', ({ data }) => !data.draft);
 
@@ -85,59 +86,5 @@ const tags = listBlogTags(sorted);
     ))}
   </div>
 
-  <script is:inline define:vars={{ knownTags: tags }}>
-    const statusEl = document.getElementById('blog-status');
-    const emptyEl = document.getElementById('blog-empty');
-
-    function getSelectedTag() {
-      const params = new URLSearchParams(window.location.search);
-      const tag = params.get('tag');
-      if (!tag) return null;
-      if (!knownTags.includes(tag)) return null;
-      return tag;
-    }
-
-    function setActiveTag(selectedTag) {
-      const links = document.querySelectorAll('[data-tag-link]');
-      for (const link of links) {
-        const tag = link.getAttribute('data-tag');
-        const isActive = (tag === '' && !selectedTag) || tag === selectedTag;
-        if (isActive) link.setAttribute('aria-current', 'page');
-        else link.removeAttribute('aria-current');
-      }
-    }
-
-    function applyFilter() {
-      const selectedTag = getSelectedTag();
-      setActiveTag(selectedTag);
-
-      const months = document.querySelectorAll('[data-month-group]');
-      let visibleCount = 0;
-
-      for (const monthEl of months) {
-        const posts = monthEl.querySelectorAll('[data-post]');
-        let monthVisible = 0;
-
-        for (const postEl of posts) {
-          const raw = postEl.getAttribute('data-tags') || '';
-          const tags = raw ? raw.split(',').filter(Boolean) : [];
-          const visible = !selectedTag || tags.includes(selectedTag);
-
-          postEl.hidden = !visible;
-          if (visible) monthVisible += 1;
-        }
-
-        monthEl.hidden = monthVisible === 0;
-        visibleCount += monthVisible;
-      }
-
-      emptyEl.hidden = visibleCount !== 0;
-
-      if (selectedTag) statusEl.textContent = `Tag: #${selectedTag} (${visibleCount}件)`;
-      else statusEl.textContent = `${visibleCount}件`;
-    }
-
-    applyFilter();
-    window.addEventListener('popstate', applyFilter);
-  </script>
+  <script is:inline type="module" src={blogFilterScriptUrl}></script>
 </BaseLayout>
