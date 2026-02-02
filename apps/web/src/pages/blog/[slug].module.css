@@ -1,0 +1,88 @@
+.article {
+  max-width: 58rem;
+  margin-inline: auto;
+  padding: clamp(1.1rem, 2.2vw, 2rem);
+  border-radius: calc(var(--radius) + 0.2rem);
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  background:
+    radial-gradient(1200px 800px at 18% 0%, color-mix(in srgb, var(--link) 10%, transparent), transparent 55%),
+    radial-gradient(900px 700px at 85% 18%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%),
+    color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin-bottom: 0.6rem;
+}
+
+.meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.date {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.tag:hover,
+.tag:focus-visible {
+  color: var(--fg);
+  border-color: color-mix(in srgb, var(--link) 55%, var(--border));
+  outline: none;
+}
+
+.content :global(pre) {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+}
+
+.content :global(code) {
+  font-size: 0.95em;
+}
+
+.content :global(p) {
+  line-height: 1.85;
+}
+
+.content :global(blockquote) {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid color-mix(in srgb, var(--link) 55%, var(--border));
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  border-radius: 0.75rem;
+}
+
+@media (max-width: 30rem) {
+  .article {
+    padding: 1rem;
+  }
+}

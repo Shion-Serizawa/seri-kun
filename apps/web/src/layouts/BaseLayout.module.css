@@ -89,7 +89,7 @@
 .footer {
   border-top: 1px solid var(--border);
   padding-block: 1.25rem;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
 }
 
 .footerInner {
@@ -115,6 +115,7 @@
 
 .analyticsNote {
   font-size: 0.875rem;
+  color: var(--muted);
 }
 
 @media (min-width: 48rem) {
