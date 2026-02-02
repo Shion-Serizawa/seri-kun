@@ -137,12 +137,15 @@ src/content/blog/
 
 ```yaml
 title: "記事タイトル"
-slug: "example"
 publishedAt: "2026-01-31"
 tags: ["kotlin", "infra"]
 draft: false
 description: "記事の要約"
 ```
+
+補足:
+- ルートの `/blog/[slug]` は Astro の Content Collections が提供する `entry.slug`（ファイルパス由来）を用いる。
+- `slug` を frontmatter で管理したい場合は、ファイル名（またはディレクトリ構造）で表現する。
 
 ### 4.3 日付の意味論（重要）
 
