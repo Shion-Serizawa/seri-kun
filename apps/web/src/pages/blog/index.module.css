@@ -1,0 +1,164 @@
+.intro {
+  margin-bottom: 1.25rem;
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  max-width: 70ch;
+}
+
+.controls {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tagLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 65%, transparent);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.tagLink:hover,
+.tagLink:focus-visible {
+  color: var(--fg);
+  border-color: color-mix(in srgb, var(--link) 45%, var(--border));
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  outline: none;
+}
+
+.tagLink[aria-current='page'] {
+  color: var(--fg);
+  border-color: color-mix(in srgb, var(--link) 60%, var(--border));
+  background: color-mix(in srgb, var(--link) 14%, var(--surface));
+}
+
+.status {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.empty {
+  margin: 1.5rem 0;
+  color: var(--muted);
+}
+
+.groups {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.month {
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.monthTitle {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  font-size: 1.15rem;
+  color: color-mix(in srgb, var(--fg) 92%, transparent);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.9rem;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--link) 55%, var(--border));
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  outline: none;
+}
+
+.cardHead {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.cardTitle {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.cardDate {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.cardDesc {
+  margin: 0.5rem 0 0;
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+}
+
+.cardTags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.tagChip {
+  display: inline-flex;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tagLink,
+  .card {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:focus-visible {
+    transform: none;
+  }
+}
+
