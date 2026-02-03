@@ -136,11 +136,26 @@ docs/               確定したドキュメント（必要になったら）
 
 ### 3.2 実装方針
 
-- 共通レイアウト（`apps/web/src/layouts/BaseLayout.astro` 等）の `</head>` または `</body>` 直前に公式スクリプトを挿入
+- Cloudflare Web Analytics は「Cloudflare Pages の one-click setup（自動挿入）」と「手動で script を埋め込む」の 2 方式がある
+  - 本プロジェクトは **ローカル/CI でも同じ HTML が生成される**ことを優先し、手動で script を埋め込む方式を採用する
+- 共通レイアウト（`apps/web/src/layouts/BaseLayout.astro`）の `</head>` 内に公式スクリプトを挿入する
 - `defer` を付け、描画のブロックを避ける
+- SSG（MPA）前提のため SPA Measurement は不要とし、`data-cf-beacon` で `spa: false` を明示する（History API のフックや `popstate` 監視を避ける）
 
 設定方針:
 - Web Analytics の token は秘匿情報ではないが、差し替えやすいように `PUBLIC_CF_ANALYTICS_TOKEN` として環境変数化する（Astro 側は `import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN`）
+
+挿入するスクリプト（例）:
+```html
+<script
+  defer
+  src="https://static.cloudflareinsights.com/beacon.min.js"
+  data-cf-beacon='{"token":"YOUR_TOKEN","spa":false}'
+></script>
+```
+
+注意:
+- 手動埋め込みの場合、計測データは `cloudflareinsights.com/cdn-cgi/rum` に送信される（広告ブロッカー等でブロックされることがある）。
 
 ## 4. 設定・Secrets 管理（実装指針）
 
