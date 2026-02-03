@@ -9,6 +9,11 @@ type Props = {
 
 const { title, description } = Astro.props;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+const cfAnalyticsBeacon =
+  typeof cfAnalyticsToken === 'string' && cfAnalyticsToken.length > 0
+    ? JSON.stringify({ token: cfAnalyticsToken, spa: false })
+    : null;
 ---
 
 <!doctype html>
@@ -21,6 +26,14 @@ const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astr
     {description ? <meta name="description" content={description} /> : null}
     <link rel="canonical" href={canonicalUrl} />
     <slot name="head" />
+    {cfAnalyticsBeacon ? (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={cfAnalyticsBeacon}
+      />
+    ) : null}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>

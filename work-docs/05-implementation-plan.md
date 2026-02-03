@@ -36,6 +36,9 @@ M5: テスト/CI が最低限回る
 - [x] Commit 3: `feat: add base layout + global styles`
 - [x] Commit 4: `feat: add works data model and /works page`
 - [x] Commit 5: `feat: scaffold blog content collection`
+- [x] Commit 6: `feat: implement /blog list with tag + monthly grouping`
+- [x] Commit 7: `feat: implement /blog/[slug] page (md render + meta)`
+- [x] Commit 8: `feat: add analytics hook point`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
@@ -121,7 +124,7 @@ M5: テスト/CI が最低限回る
 
 - ブログ Markdown の置き場を確定
 - `src/content.config.ts` でスキーマ定義（frontmatter を型付け）
-  - `slug` は frontmatter ではなく `entry.slug`（ファイルパス由来）を使う方針
+  - `slug` は frontmatter ではなく `entry.id`（相対パス）を使う方針
 - サンプル記事 1 本を追加（draft=false）
 
 主な変更（例）:
