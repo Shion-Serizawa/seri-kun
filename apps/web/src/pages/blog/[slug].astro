@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { toBlogRouteId } from '../../lib/blog/blog-entry-id';
 import styles from './[slug].module.css';
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 export async function getStaticPaths() {
   const entries = await getCollection('blog', ({ data }) => !data.draft);
   return entries.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: toBlogRouteId(entry.id) },
     props: { entry },
   }));
 }
@@ -55,4 +56,3 @@ const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astr
     </div>
   </article>
 </BaseLayout>
-

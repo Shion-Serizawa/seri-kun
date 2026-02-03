@@ -1,5 +1,5 @@
 export type BlogListItem = Readonly<{
-  slug: string;
+  id: string;
   title: string;
   publishedAt: string; // YYYY-MM-DD
   tags: readonly string[];
@@ -47,4 +47,3 @@ export function toMonthKey(publishedAt: string): string {
   if (!ISO_DATE_RE.test(publishedAt)) return 'unknown';
   return publishedAt.slice(0, 7);
 }
-

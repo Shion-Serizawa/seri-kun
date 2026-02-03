@@ -2,13 +2,13 @@ import { parseSelectedTag } from './parse-selected-tag';
 
 function listKnownTags(): string[] {
   const links = document.querySelectorAll('[data-tag-link][data-tag]');
-  const tags: string[] = [];
+  const tags = new Set<string>();
   for (const link of links) {
     const tag = link.getAttribute('data-tag');
     if (!tag) continue;
-    tags.push(tag);
+    tags.add(tag);
   }
-  return tags;
+  return [...tags];
 }
 
 function setActiveTag(selectedTag: string | null): void {
@@ -39,7 +39,16 @@ function applyFilter(): void {
 
     for (const postEl of posts) {
       const raw = postEl.getAttribute('data-tags') || '';
-      const tags = raw ? raw.split(',').filter(Boolean) : [];
+      let tags: string[] = [];
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.every((t) => typeof t === 'string')) tags = parsed;
+          else tags = raw.split(',').filter(Boolean);
+        } catch {
+          tags = raw.split(',').filter(Boolean);
+        }
+      }
       const visible = !selectedTag || tags.includes(selectedTag);
 
       (postEl as HTMLElement).hidden = !visible;
@@ -57,5 +66,15 @@ function applyFilter(): void {
 }
 
 applyFilter();
-window.addEventListener('popstate', applyFilter);
+declare global {
+  interface Window {
+    __seriKunBlogPopstateHandler?: (event: PopStateEvent) => void;
+  }
+}
 
+const handler = () => applyFilter();
+if (window.__seriKunBlogPopstateHandler) {
+  window.removeEventListener('popstate', window.__seriKunBlogPopstateHandler);
+}
+window.__seriKunBlogPopstateHandler = handler;
+window.addEventListener('popstate', handler);

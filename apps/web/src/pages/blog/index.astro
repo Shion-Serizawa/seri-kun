@@ -7,13 +7,14 @@ import {
   sortBlogListNewestFirst,
   type BlogListItem,
 } from '../../lib/blog/blog-list';
+import { toBlogRouteId } from '../../lib/blog/blog-entry-id';
 import styles from './index.module.css';
 import blogFilterScriptUrl from '../../lib/blog/blog-filter.client.ts?url';
 
 const entries = await getCollection('blog', ({ data }) => !data.draft);
 
 const posts: BlogListItem[] = entries.map((entry) => ({
-  slug: entry.slug,
+  id: toBlogRouteId(entry.id),
   title: entry.data.title,
   publishedAt: entry.data.publishedAt,
   tags: entry.data.tags,
@@ -60,10 +61,10 @@ const tags = listBlogTags(sorted);
             <li
               class={styles.item}
               data-post
-              data-tags={post.tags.join(',')}
+              data-tags={JSON.stringify(post.tags)}
               data-published-at={post.publishedAt}
             >
-              <a class={styles.card} href={`/blog/${post.slug}`}>
+              <a class={styles.card} href={`/blog/${post.id}`}>
                 <div class={styles.cardHead}>
                   <div class={styles.cardTitle}>{post.title}</div>
                   <time class={styles.cardDate} datetime={post.publishedAt}>
