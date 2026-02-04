@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { toBlogRouteId } from '../../lib/blog/blog-entry-id';
+import { getBlogUpdatedAtIso } from '../../lib/updated-at';
 import styles from './[slug].module.css';
 
 type Props = {
@@ -22,6 +23,9 @@ const { Content } = await entry.render();
 const pageTitle = `${entry.data.title} | Blog | seri-kun`;
 const description = entry.data.description;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+const updatedAtIso = getBlogUpdatedAtIso(entry.id);
+const updatedAtDate = updatedAtIso ? updatedAtIso.slice(0, 10) : null;
+const shouldShowUpdatedAt = updatedAtDate !== null && updatedAtDate !== entry.data.publishedAt;
 ---
 
 <BaseLayout title={pageTitle} description={description}>
@@ -36,9 +40,20 @@ const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astr
     <header class={styles.header}>
       <h1 class={styles.title}>{entry.data.title}</h1>
       <div class={styles.meta}>
-        <time datetime={entry.data.publishedAt} class={styles.date}>
-          {entry.data.publishedAt}
-        </time>
+        <div class={styles.metaItem}>
+          <span class={styles.metaLabel}>公開</span>
+          <time datetime={entry.data.publishedAt} class={styles.date}>
+            {entry.data.publishedAt}
+          </time>
+        </div>
+        {shouldShowUpdatedAt ? (
+          <div class={styles.metaItem}>
+            <span class={styles.metaLabel}>更新</span>
+            <time datetime={updatedAtIso!} class={styles.date}>
+              {updatedAtDate}
+            </time>
+          </div>
+        ) : null}
       </div>
       {entry.data.tags.length ? (
         <div class={styles.tags} aria-label="Tags">

@@ -40,6 +40,7 @@ M5: テスト/CI が最低限回る
 - [x] Commit 7: `feat: implement /blog/[slug] page (md render + meta)`
 - [x] Commit 8: `feat: add analytics hook point`
 - [x] Commit 9: `feat: generate updatedAt map from git`
+- [x] Commit 10: `feat: wire updatedAt into blog page`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
