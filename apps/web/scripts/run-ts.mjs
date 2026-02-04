@@ -58,7 +58,19 @@ execFileSync(
 );
 
 const outUrl = pathToFileURL(outFilePath).href;
-await import(outUrl).then((mod) => {
-  if (typeof mod.main === 'function') return mod.main(scriptArgs);
-  return undefined;
-});
+
+try {
+  const mod = await import(outUrl);
+  if (typeof mod.main === 'function') {
+    await mod.main(scriptArgs);
+  }
+} catch (error) {
+  const message =
+    error && typeof error === 'object' && 'message' in error ? String(error.message) : String(error);
+  const stack = error && typeof error === 'object' && 'stack' in error ? String(error.stack) : '';
+
+  console.error(`[run-ts] Failed to run: ${outUrl}`);
+  console.error(message);
+  if (stack) console.error(stack);
+  process.exit(1);
+}

@@ -5,12 +5,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 function findGitRoot(cwd: string): string {
-  const out = execFileSync('git', ['rev-parse', '--show-toplevel'], {
-    cwd,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'ignore'],
-  });
-  return out.trim();
+  try {
+    const out = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+      cwd,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    return out.trim();
+  } catch (error) {
+    const originalMessage =
+      error && typeof error === 'object' && 'message' in error ? String(error.message) : String(error);
+    throw new Error(
+      `[findGitRoot] cwd is not inside a git repository: cwd="${cwd}" (original error: ${originalMessage})`,
+    );
+  }
 }
 
 function toPosixPath(p: string): string {
