@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# generated metadata (git-based)
+src/generated/
+.tmp/
+
 # dependencies
 node_modules/
 
