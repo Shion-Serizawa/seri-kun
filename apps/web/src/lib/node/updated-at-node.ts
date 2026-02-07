@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { createUpdatedAtLoader, type UpdatedAtLoader } from '../updated-at';
 
@@ -12,7 +11,14 @@ export function createFileUpdatedAtLoader(
 }
 
 export function getDefaultBlogUpdatedAtFilePath(): string {
-  const here = path.dirname(fileURLToPath(import.meta.url));
-  return path.resolve(here, '..', 'generated', 'blog-updated-at.json');
-}
+  const candidates = [
+    path.resolve(process.cwd(), 'src', 'generated', 'blog-updated-at.json'),
+    path.resolve(process.cwd(), 'apps', 'web', 'src', 'generated', 'blog-updated-at.json'),
+  ];
 
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+
+  return candidates[0];
+}

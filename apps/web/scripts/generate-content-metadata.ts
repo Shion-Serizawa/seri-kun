@@ -26,6 +26,10 @@ function toPosixPath(p: string): string {
   return p.split(path.sep).join('/');
 }
 
+function stripMarkdownExtension(entryId: string): string {
+  return entryId.replace(/\.md$/i, '');
+}
+
 function listMarkdownFiles(rootDir: string): string[] {
   const out: string[] = [];
 
@@ -111,9 +115,13 @@ export function main(): void {
 
   for (const absFile of files) {
     const entryId = toPosixPath(path.relative(blogRoot, absFile));
+    const entryIdNoExt = stripMarkdownExtension(entryId);
     const relFromRepo = toPosixPath(path.relative(repoRoot, absFile));
     const lastCommit = getLastCommitIso(repoRoot, relFromRepo);
-    if (lastCommit) map[entryId] = lastCommit;
+    if (lastCommit) {
+      map[entryId] = lastCommit;
+      map[entryIdNoExt] = lastCommit;
+    }
   }
 
   writeJson(outputPath, map);
