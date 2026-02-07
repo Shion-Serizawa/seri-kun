@@ -94,9 +94,10 @@ function writeJson(filePath: string, data: unknown): void {
 export function main(): void {
   const scriptDir = path.dirname(fileURLToPath(import.meta.url));
   const compiledMarker = `${path.sep}.tmp${path.sep}ts-scripts${path.sep}`;
-  const appRoot = scriptDir.includes(compiledMarker)
-    ? path.resolve(scriptDir, '..', '..', '..', '..')
-    : path.resolve(scriptDir, '..');
+  const uncompiledScriptDir = scriptDir.includes(compiledMarker)
+    ? scriptDir.replace(compiledMarker, path.sep)
+    : scriptDir;
+  const appRoot = path.resolve(uncompiledScriptDir, '..');
   const repoRoot = findGitRoot(appRoot);
 
   const blogRoot = path.resolve(appRoot, 'src', 'content', 'blog');

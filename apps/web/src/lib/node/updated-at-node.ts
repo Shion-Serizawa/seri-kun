@@ -10,14 +10,17 @@ export function createFileUpdatedAtLoader(
   return createUpdatedAtLoader(() => readFile(filePath));
 }
 
-export function getDefaultBlogUpdatedAtFilePath(): string {
+export function getDefaultBlogUpdatedAtFilePath(
+  cwdProvider: () => string = () => process.cwd(),
+  existsSync: (filePath: string) => boolean = (p) => fs.existsSync(p),
+): string {
   const candidates = [
-    path.resolve(process.cwd(), 'src', 'generated', 'blog-updated-at.json'),
-    path.resolve(process.cwd(), 'apps', 'web', 'src', 'generated', 'blog-updated-at.json'),
+    path.resolve(cwdProvider(), 'src', 'generated', 'blog-updated-at.json'),
+    path.resolve(cwdProvider(), 'apps', 'web', 'src', 'generated', 'blog-updated-at.json'),
   ];
 
   for (const candidate of candidates) {
-    if (fs.existsSync(candidate)) return candidate;
+    if (existsSync(candidate)) return candidate;
   }
 
   return candidates[0];
