@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "gen:meta": "node scripts/run-ts.mjs scripts/generate-content-metadata.ts",
+    "prebuild": "npm run gen:meta",
     "build": "astro build",
     "preview": "astro preview",
     "lint": "eslint .",

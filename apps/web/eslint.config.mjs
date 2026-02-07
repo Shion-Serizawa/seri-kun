@@ -9,7 +9,7 @@ const tsEslintRecommendedCompat =
 
 export default [
   {
-    ignores: ['dist/', 'node_modules/', '.astro/'],
+    ignores: ['dist/', 'node_modules/', '.astro/', '.tmp/', 'src/generated/'],
   },
 
   js.configs.recommended,
@@ -29,6 +29,21 @@ export default [
     rules: {
       ...tsEslintRecommendedCompat,
       ...tseslintPlugin.configs.recommended.rules,
+    },
+  },
+
+  // Node-side generation scripts (typed with minimal shims)
+  {
+    files: ['scripts/**/*.{ts,mjs}'],
+    rules: {
+      'no-undef': 'off',
+      '@typescript-eslint/triple-slash-reference': 'off',
+    },
+  },
+  {
+    files: ['scripts/node-shim.d.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 

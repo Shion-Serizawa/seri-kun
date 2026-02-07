@@ -39,6 +39,8 @@ M5: テスト/CI が最低限回る
 - [x] Commit 6: `feat: implement /blog list with tag + monthly grouping`
 - [x] Commit 7: `feat: implement /blog/[slug] page (md render + meta)`
 - [x] Commit 8: `feat: add analytics hook point`
+- [x] Commit 9: `feat: generate updatedAt map from git`
+- [x] Commit 10: `feat: wire updatedAt into blog page`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
@@ -183,7 +185,9 @@ M5: テスト/CI が最低限回る
 
 主な変更（例）:
 - `apps/web/scripts/generate-content-metadata.ts`
-- `apps/web/src/generated/blog-updated-at.json`（生成物。コミットするかどうかは方針で決める）
+- `apps/web/scripts/run-ts.mjs`（TypeScript スクリプト実行用の最小ランナー）
+- `apps/web/src/lib/updated-at.ts`（生成物参照の単一窓口）
+- `apps/web/src/generated/blog-updated-at.json`（生成物。初期はコミットしない）
 - `apps/web/package.json` scripts 更新
 
 方針選択（どちらか）:
