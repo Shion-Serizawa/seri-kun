@@ -2,7 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { toBlogRouteId } from '../../lib/blog/blog-entry-id';
-import { createFileUpdatedAtLoader, getDefaultBlogUpdatedAtFilePath } from '../../lib/updated-at';
+import { createFileUpdatedAtLoader, getDefaultBlogUpdatedAtFilePath } from '../../lib/node/updated-at-node';
 import styles from './[slug].module.css';
 
 type Props = {

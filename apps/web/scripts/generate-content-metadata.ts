@@ -3,6 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 function findGitRoot(cwd: string): string {
   try {
@@ -43,13 +44,37 @@ function listMarkdownFiles(rootDir: string): string[] {
 
 function getLastCommitIso(repoRoot: string, relativePathFromRepoRoot: string): string | null {
   try {
-    const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', relativePathFromRepoRoot], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-    return out.length ? out : null;
-  } catch {
+    const runLog = (): string =>
+      execFileSync('git', ['log', '-1', '--format=%cI', '--', relativePathFromRepoRoot], {
+        cwd: repoRoot,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim();
+
+    let out = runLog();
+    if (out.length) return out;
+
+    try {
+      execFileSync('git', ['fetch', '--unshallow'], { cwd: repoRoot, stdio: 'inherit' });
+    } catch {
+      // ignore
+    }
+
+    out = runLog();
+    if (out.length) return out;
+
+    if (process.env.CI) {
+      throw new Error(
+        `[getLastCommitIso] git log returned empty for "${relativePathFromRepoRoot}". This is often caused by a shallow clone. Configure CI to fetch full history (e.g. actions/checkout with fetch-depth: 0) so updatedAt can be generated.`,
+      );
+    }
+
+    return null;
+  } catch (error) {
+    if (error && typeof error === 'object' && 'message' in error) {
+      const message = String(error.message);
+      if (message.startsWith('[getLastCommitIso]')) throw error;
+    }
     return null;
   }
 }
@@ -63,7 +88,11 @@ function writeJson(filePath: string, data: unknown): void {
 }
 
 export function main(): void {
-  const appRoot = path.resolve(process.cwd());
+  const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+  const compiledMarker = `${path.sep}.tmp${path.sep}ts-scripts${path.sep}`;
+  const appRoot = scriptDir.includes(compiledMarker)
+    ? path.resolve(scriptDir, '..', '..', '..', '..')
+    : path.resolve(scriptDir, '..');
   const repoRoot = findGitRoot(appRoot);
 
   const blogRoot = path.resolve(appRoot, 'src', 'content', 'blog');

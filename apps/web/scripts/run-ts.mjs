@@ -26,11 +26,23 @@ fs.mkdirSync(outDir, { recursive: true });
 
 const tscPath = path.resolve(projectRoot, 'node_modules', 'typescript', 'lib', 'tsc.js');
 const relScriptPath = path.relative(projectRoot, absScriptPath);
+if (relScriptPath.startsWith('..') || path.isAbsolute(relScriptPath)) {
+  console.error(
+    `[run-ts] Refusing to run script outside projectRoot: scriptPath="${scriptPath}" resolved="${absScriptPath}" projectRoot="${projectRoot}"`,
+  );
+  process.exit(1);
+}
 const outFilePath = path.resolve(
   outDir,
   path.dirname(relScriptPath),
   `${path.basename(relScriptPath, '.ts')}.js`,
 );
+
+const relOut = path.relative(outDir, outFilePath);
+if (relOut.startsWith('..') || path.isAbsolute(relOut)) {
+  console.error(`[run-ts] Refusing to write outside outDir: outFilePath="${outFilePath}"`);
+  process.exit(1);
+}
 
 execFileSync(
   process.execPath,
