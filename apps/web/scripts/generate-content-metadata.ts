@@ -3,7 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 function findGitRoot(cwd: string): string {
   try {
@@ -128,6 +128,11 @@ export function main(): void {
   writeJson(outputPath, map);
 }
 
-if (import.meta.url === new URL(process.argv[1], 'file:').href) {
-  main();
+const entryArg = process.argv[1];
+if (entryArg) {
+  const entryRealPath = fs.realpathSync(path.resolve(entryArg));
+  const entryUrl = new URL(pathToFileURL(entryRealPath)).href;
+  if (import.meta.url === entryUrl) {
+    main();
+  }
 }
