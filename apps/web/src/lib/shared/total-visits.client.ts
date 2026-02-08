@@ -1,4 +1,5 @@
 type VisitsResponse = { total: number };
+export {};
 
 declare global {
   interface Window {

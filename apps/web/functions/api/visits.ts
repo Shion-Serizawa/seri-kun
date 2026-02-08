@@ -1,19 +1,12 @@
+/// <reference types="@cloudflare/workers-types" />
+
 const VISITS_KEY = 'site:total_visits';
 
 type VisitsResponse = { total: number };
 type ErrorResponse = { error: 'server_error' };
 
-interface KVNamespaceLike {
-  get(key: string): Promise<string | null>;
-  put(key: string, value: string): Promise<void>;
-}
-
 interface Env {
-  VISITS_KV?: KVNamespaceLike;
-}
-
-interface FunctionContext {
-  env: Env;
+  VISITS_KV?: KVNamespace;
 }
 
 function createJsonResponse(status: number, body: VisitsResponse | ErrorResponse): Response {
@@ -39,12 +32,12 @@ function parseStoredVisits(raw: string | null): number {
   return parsed;
 }
 
-async function readTotal(kv: KVNamespaceLike): Promise<number> {
+async function readTotal(kv: KVNamespace): Promise<number> {
   const current = await kv.get(VISITS_KEY);
   return parseStoredVisits(current);
 }
 
-async function incrementAndReadTotal(kv: KVNamespaceLike): Promise<number> {
+async function incrementAndReadTotal(kv: KVNamespace): Promise<number> {
   // KV has no atomic increment; this read-modify-write is acceptable for low traffic.
   const current = await readTotal(kv);
   const next = current + 1;
@@ -52,26 +45,26 @@ async function incrementAndReadTotal(kv: KVNamespaceLike): Promise<number> {
   return next;
 }
 
-function requireKvBinding(context: FunctionContext): KVNamespaceLike | null {
-  return context.env.VISITS_KV ?? null;
+function requireKvBinding(env: Env): KVNamespace | null {
+  return env.VISITS_KV ?? null;
 }
 
-export async function onRequestGet(context: FunctionContext): Promise<Response> {
-  const kv = requireKvBinding(context);
+export const onRequestGet: PagesFunction<Env> = async (context): Promise<Response> => {
+  const kv = requireKvBinding(context.env);
   if (kv === null) {
     return createJsonResponse(500, { error: 'server_error' });
   }
 
   const total = await readTotal(kv);
   return createJsonResponse(200, { total });
-}
+};
 
-export async function onRequestPost(context: FunctionContext): Promise<Response> {
-  const kv = requireKvBinding(context);
+export const onRequestPost: PagesFunction<Env> = async (context): Promise<Response> => {
+  const kv = requireKvBinding(context.env);
   if (kv === null) {
     return createJsonResponse(500, { error: 'server_error' });
   }
 
   const total = await incrementAndReadTotal(kv);
   return createJsonResponse(200, { total });
-}
+};
