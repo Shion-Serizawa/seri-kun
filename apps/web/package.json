@@ -7,7 +7,7 @@
     "gen:meta": "node scripts/run-ts.mjs scripts/generate-content-metadata.ts",
     "prebuild": "npm run gen:meta",
     "build": "astro build",
-    "build:e2e": "astro build",
+    "build:e2e": "npm run prebuild && astro build",
     "preview": "astro preview",
     "lint": "eslint .",
     "test": "vitest run",
