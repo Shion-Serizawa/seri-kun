@@ -1,0 +1,18 @@
+---
+import totalVisitsScriptUrl from '../../lib/shared/total-visits.client.ts?url';
+
+type Props = {
+  wrapperClass: string;
+  labelClass: string;
+  valueClass: string;
+};
+
+const { wrapperClass, labelClass, valueClass } = Astro.props;
+---
+
+<div class={wrapperClass}>
+  <span class={labelClass}>Total Visits:</span>
+  <span class={valueClass} data-total-visits-value aria-label="Total visits (not yet loaded)">—</span>
+</div>
+
+<script is:inline type="module" src={totalVisitsScriptUrl}></script>

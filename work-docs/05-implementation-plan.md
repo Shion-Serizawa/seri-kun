@@ -1,6 +1,6 @@
 # 実装計画（コミット計画レベル / Astro + TypeScript）
 
-更新日: 2026-01-31
+更新日: 2026-02-08
 
 目的: `work-docs/01`〜`04` の仕様を、実装とレビューがしやすい **小さなコミット**に分割して進める。
 
@@ -41,6 +41,8 @@ M5: テスト/CI が最低限回る
 - [x] Commit 8: `feat: add analytics hook point`
 - [x] Commit 9: `feat: generate updatedAt map from git`
 - [x] Commit 10: `feat: wire updatedAt into blog page`
+- [x] Commit 11: `feat: add cloudflare pages function for visits counter`
+- [x] Commit 12: `feat: show total visits in footer`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
