@@ -45,7 +45,8 @@ async function updateTotalVisits(): Promise<void> {
     return;
   }
 
-  const formatted = formatTotal(total);
+  const locale = document.documentElement.lang || navigator.language;
+  const formatted = formatTotal(total, locale);
   for (const value of values) {
     value.textContent = formatted;
     value.setAttribute('aria-label', `Total visits ${formatted}`);
