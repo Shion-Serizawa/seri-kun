@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import TotalVisits from '../components/shared/TotalVisits.astro';
 import styles from './BaseLayout.module.css';
 
 type Props = {
@@ -63,10 +64,11 @@ const cfAnalyticsBeacon =
     <footer class={styles.footer}>
       <div class="container">
         <div class={styles.footerInner}>
-          <div class={styles.visits}>
-            <span class={styles.visitsLabel}>Total Visits:</span>
-            <span class={styles.visitsValue} aria-label="Total visits (not yet loaded)">—</span>
-          </div>
+          <TotalVisits
+            wrapperClass={styles.visits}
+            labelClass={styles.visitsLabel}
+            valueClass={styles.visitsValue}
+          />
           <div class={styles.analyticsNote}>Analytics: Cloudflare Web Analytics (cookie-less)</div>
         </div>
       </div>
