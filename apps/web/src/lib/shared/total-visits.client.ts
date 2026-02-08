@@ -1,28 +1,6 @@
-type VisitsResponse = { total: number };
-export {};
+import { formatTotal, isVisitsResponse } from './total-visits';
 
-declare global {
-  interface Window {
-    __seriKunTotalVisitsPromise?: Promise<number | null>;
-  }
-}
-
-function isVisitsResponse(value: unknown): value is VisitsResponse {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  if (!('total' in value)) {
-    return false;
-  }
-
-  const total = (value as { total: unknown }).total;
-  return typeof total === 'number' && Number.isFinite(total) && total >= 0;
-}
-
-function formatTotal(total: number): string {
-  return new Intl.NumberFormat('en-US').format(total);
-}
+let totalVisitsPromise: Promise<number | null> | null = null;
 
 async function requestTotalVisits(): Promise<number | null> {
   const response = await fetch('/api/visits', {
@@ -45,15 +23,15 @@ async function requestTotalVisits(): Promise<number | null> {
 }
 
 function getTotalVisitsOnce(): Promise<number | null> {
-  if (!window.__seriKunTotalVisitsPromise) {
-    window.__seriKunTotalVisitsPromise = requestTotalVisits().catch((error: unknown) => {
+  if (!totalVisitsPromise) {
+    totalVisitsPromise = requestTotalVisits().catch((error: unknown) => {
       if (import.meta.env.DEV) {
         console.debug('Failed to load total visits', error);
       }
       return null;
     });
   }
-  return window.__seriKunTotalVisitsPromise;
+  return totalVisitsPromise;
 }
 
 async function updateTotalVisits(): Promise<void> {

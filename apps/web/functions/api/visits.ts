@@ -55,8 +55,13 @@ export const onRequestGet: PagesFunction<Env> = async (context): Promise<Respons
     return createJsonResponse(500, { error: 'server_error' });
   }
 
-  const total = await readTotal(kv);
-  return createJsonResponse(200, { total });
+  try {
+    const total = await readTotal(kv);
+    return createJsonResponse(200, { total });
+  } catch (error: unknown) {
+    console.error('Failed to read total visits', error);
+    return createJsonResponse(500, { error: 'server_error' });
+  }
 };
 
 export const onRequestPost: PagesFunction<Env> = async (context): Promise<Response> => {
@@ -65,6 +70,11 @@ export const onRequestPost: PagesFunction<Env> = async (context): Promise<Respon
     return createJsonResponse(500, { error: 'server_error' });
   }
 
-  const total = await incrementAndReadTotal(kv);
-  return createJsonResponse(200, { total });
+  try {
+    const total = await incrementAndReadTotal(kv);
+    return createJsonResponse(200, { total });
+  } catch (error: unknown) {
+    console.error('Failed to increment total visits', error);
+    return createJsonResponse(500, { error: 'server_error' });
+  }
 };
