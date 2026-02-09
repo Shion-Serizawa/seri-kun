@@ -9,7 +9,7 @@ const tsEslintRecommendedCompat =
 
 export default [
   {
-    ignores: ['dist/', 'node_modules/', '.astro/', '.tmp/', 'src/generated/'],
+    ignores: ['dist/', 'node_modules/', '.astro/', '.tmp/', '.wrangler/', 'src/generated/'],
   },
 
   js.configs.recommended,

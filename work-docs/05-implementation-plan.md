@@ -43,6 +43,9 @@ M5: テスト/CI が最低限回る
 - [x] Commit 10: `feat: wire updatedAt into blog page`
 - [x] Commit 11: `feat: add cloudflare pages function for visits counter`
 - [x] Commit 12: `feat: show total visits in footer`
+- [x] Commit 13: `test: add vitest and unit tests for blog logic`
+- [x] Commit 14: `test: add tests for visits function`
+- [x] Commit 15: `test: add playwright e2e smoke tests`
 
 ### Commit 0: `chore: add mise toolchain (node/pnpm)`
 
