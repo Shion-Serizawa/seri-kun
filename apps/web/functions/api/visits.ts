@@ -8,8 +8,13 @@ const VISITS_IP_TTL_SECONDS = 60;
 
 type ErrorResponse = { error: 'server_error' | 'rate_limited' | 'forbidden' };
 
+interface VisitsKv {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
+}
+
 interface Env {
-  VISITS_KV?: KVNamespace;
+  VISITS_KV?: VisitsKv;
   IS_DEV?: string;
   ENV?: string;
   NODE_ENV?: string;
@@ -38,12 +43,12 @@ function parseStoredVisits(raw: string | null): number {
   return parsed;
 }
 
-async function readTotal(kv: KVNamespace): Promise<number> {
+async function readTotal(kv: VisitsKv): Promise<number> {
   const current = await kv.get(VISITS_KEY);
   return parseStoredVisits(current);
 }
 
-async function incrementAndReadTotal(kv: KVNamespace): Promise<number> {
+async function incrementAndReadTotal(kv: VisitsKv): Promise<number> {
   // KV has no atomic increment; this read-modify-write is acceptable for low traffic.
   const current = await readTotal(kv);
   const next = current + 1;
@@ -51,7 +56,7 @@ async function incrementAndReadTotal(kv: KVNamespace): Promise<number> {
   return next;
 }
 
-function requireKvBinding(env: Env): KVNamespace | null {
+function requireKvBinding(env: Env): VisitsKv | null {
   return env.VISITS_KV ?? null;
 }
 
@@ -82,7 +87,7 @@ function toRateLimitKey(ip: string): string {
   return `${VISITS_IP_KEY_PREFIX}${encodeURIComponent(ip)}`;
 }
 
-async function isRateLimited(kv: KVNamespace, ip: string): Promise<boolean> {
+async function isRateLimited(kv: VisitsKv, ip: string): Promise<boolean> {
   const key = toRateLimitKey(ip);
   const existing = await kv.get(key);
   if (existing !== null) {

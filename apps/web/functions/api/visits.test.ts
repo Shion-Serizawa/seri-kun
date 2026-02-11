@@ -3,8 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { onRequestGet, onRequestPost } from './visits';
 
 type HandlerContext = Parameters<typeof onRequestGet>[0];
+type VisitsKv = NonNullable<HandlerContext['env']['VISITS_KV']>;
 
-class MockKvNamespace implements KVNamespace {
+class MockKvNamespace implements VisitsKv {
   private readonly store = new Map<string, string>();
   private failGet = false;
   private failPut = false;
@@ -34,30 +35,12 @@ class MockKvNamespace implements KVNamespace {
     }
     this.store.set(key, value);
   }
-
-  async getWithMetadata(
-    key: string,
-  ): Promise<KVNamespaceGetWithMetadataResult<unknown, string> | null> {
-    const value = this.store.get(key) ?? null;
-    if (value === null) {
-      return null;
-    }
-    return { value, metadata: null };
-  }
-
-  async delete(key: string): Promise<void> {
-    this.store.delete(key);
-  }
-
-  async list(): Promise<KVNamespaceListResult<unknown, string>> {
-    return { keys: [], list_complete: true, cursor: '' };
-  }
 }
 
 function createContext(options?: {
   method?: 'GET' | 'POST';
   headers?: Record<string, string>;
-  kv?: KVNamespace;
+  kv?: VisitsKv;
   env?: Record<string, string | undefined>;
 }): HandlerContext {
   const request = new Request('https://example.com/api/visits', {
