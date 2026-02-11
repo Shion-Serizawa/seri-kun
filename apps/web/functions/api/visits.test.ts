@@ -99,7 +99,7 @@ describe('/api/visits function', () => {
       createContext({
         method: 'POST',
         kv,
-        headers: { 'cf-connecting-ip': '203.0.113.11' },
+        headers: { 'cf-connecting-ip': '203.0.113.11', origin: 'https://example.com' },
       }),
     );
 
@@ -116,7 +116,7 @@ describe('/api/visits function', () => {
       createContext({
         method: 'POST',
         kv,
-        headers: { 'cf-connecting-ip': '203.0.113.12' },
+        headers: { 'cf-connecting-ip': '203.0.113.12', origin: 'https://example.com' },
       }),
     );
 
@@ -124,12 +124,29 @@ describe('/api/visits function', () => {
     await expect(response.json()).resolves.toEqual({ error: 'rate_limited' });
   });
 
-  it('POST remains permissive when client IP is missing', async () => {
+  it('POST returns 429 when client IP is missing', async () => {
     const kv = new MockKvNamespace();
 
-    const response = await onRequestPost(createContext({ method: 'POST', kv }));
-    expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual({ total: 1 });
+    const response = await onRequestPost(
+      createContext({ method: 'POST', kv, headers: { origin: 'https://example.com' } }),
+    );
+    expect(response.status).toBe(429);
+    await expect(response.json()).resolves.toEqual({ error: 'rate_limited' });
+  });
+
+  it('POST returns 403 for cross-origin requests', async () => {
+    const kv = new MockKvNamespace();
+
+    const response = await onRequestPost(
+      createContext({
+        method: 'POST',
+        kv,
+        headers: { 'cf-connecting-ip': '203.0.113.14', origin: 'https://attacker.example' },
+      }),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({ error: 'forbidden' });
   });
 
   it('POST returns 500 when KV access throws', async () => {
@@ -140,7 +157,7 @@ describe('/api/visits function', () => {
       createContext({
         method: 'POST',
         kv,
-        headers: { 'cf-connecting-ip': '203.0.113.13' },
+        headers: { 'cf-connecting-ip': '203.0.113.13', origin: 'https://example.com' },
       }),
     );
 

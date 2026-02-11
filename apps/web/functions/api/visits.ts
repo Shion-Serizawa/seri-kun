@@ -6,7 +6,7 @@ const VISITS_KEY = 'site:total_visits';
 const VISITS_IP_KEY_PREFIX = 'visits:ip:';
 const VISITS_IP_TTL_SECONDS = 60;
 
-type ErrorResponse = { error: 'server_error' | 'rate_limited' };
+type ErrorResponse = { error: 'server_error' | 'rate_limited' | 'forbidden' };
 
 interface Env {
   VISITS_KV?: KVNamespace;
@@ -75,17 +75,7 @@ function logServerError(context: FunctionContext, message: string, error: unknow
 
 function getClientIp(request: Request): string | null {
   const cfConnectingIp = request.headers.get('cf-connecting-ip')?.trim();
-  if (cfConnectingIp) {
-    return cfConnectingIp;
-  }
-
-  const xForwardedFor = request.headers.get('x-forwarded-for');
-  if (!xForwardedFor) {
-    return null;
-  }
-
-  const firstIp = xForwardedFor.split(',')[0]?.trim();
-  return firstIp || null;
+  return cfConnectingIp || null;
 }
 
 function toRateLimitKey(ip: string): string {
@@ -100,6 +90,34 @@ async function isRateLimited(kv: KVNamespace, ip: string): Promise<boolean> {
   }
 
   await kv.put(key, '1', { expirationTtl: VISITS_IP_TTL_SECONDS });
+  return false;
+}
+
+function parseOrigin(value: string | null): string | null {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+function isSameOriginRequest(request: Request): boolean {
+  const requestOrigin = new URL(request.url).origin;
+
+  const origin = parseOrigin(request.headers.get('origin'));
+  if (origin !== null) {
+    return origin === requestOrigin;
+  }
+
+  const referer = parseOrigin(request.headers.get('referer'));
+  if (referer !== null) {
+    return referer === requestOrigin;
+  }
+
   return false;
 }
 
@@ -124,13 +142,19 @@ export const onRequestPost: PagesFunction<Env> = async (context): Promise<Respon
     return createJsonResponse(500, { error: 'server_error' });
   }
 
+  if (!isSameOriginRequest(context.request)) {
+    return createJsonResponse(403, { error: 'forbidden' });
+  }
+
   try {
     const clientIp = getClientIp(context.request);
-    if (clientIp) {
-      const limited = await isRateLimited(kv, clientIp);
-      if (limited) {
-        return createJsonResponse(429, { error: 'rate_limited' });
-      }
+    if (!clientIp) {
+      return createJsonResponse(429, { error: 'rate_limited' });
+    }
+
+    const limited = await isRateLimited(kv, clientIp);
+    if (limited) {
+      return createJsonResponse(429, { error: 'rate_limited' });
     }
 
     const total = await incrementAndReadTotal(kv);
