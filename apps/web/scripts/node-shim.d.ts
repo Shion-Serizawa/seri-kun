@@ -13,7 +13,8 @@ declare module 'node:path' {
 }
 
 declare module 'node:url' {
-  export const fileURLToPath: (...args: any[]) => any;
+  export const fileURLToPath: (url: URL | string) => string;
+  export const pathToFileURL: (path: string) => URL;
 }
 
 declare const process: any;
