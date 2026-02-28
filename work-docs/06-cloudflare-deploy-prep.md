@@ -155,6 +155,11 @@ cd d:\Shion\work2\typescript\seri-kun
 mise exec -- pnpm -C apps/web test
 ```
 
+補足（`astro dev` だけで確認したい場合）:
+- `mise exec -- pnpm -C apps/web dev` でもフッターの `Total Visits` は動作する
+- この場合は `/api/visits`（Functions）を使わず、開発時限定でブラウザ `localStorage` に保存するフォールバックで再現する
+- 値は「そのブラウザのローカル値」であり、Cloudflare KV の値とは連動しない
+
 ---
 
 ## 6. ドメイン取得して差し替えるフェーズ

@@ -1,5 +1,6 @@
 import { formatTotal } from './total-visits';
 import { createHttpVisitsGateway, loadTotalVisits } from './visits-gateway';
+import { createLocalStorageVisitsGateway, resolveBrowserLocalStorage } from './visits-gateway.local';
 
 let totalVisitsPromise: Promise<number | null> | null = null;
 const gateway = createHttpVisitsGateway({
@@ -9,7 +10,21 @@ const gateway = createHttpVisitsGateway({
 });
 
 async function requestTotalVisits(): Promise<number | null> {
-  return loadTotalVisits(gateway);
+  const total = await loadTotalVisits(gateway);
+  if (typeof total === 'number') {
+    return total;
+  }
+
+  if (!import.meta.env.DEV) {
+    return null;
+  }
+
+  const localStorage = resolveBrowserLocalStorage();
+  if (!localStorage) {
+    return null;
+  }
+
+  return loadTotalVisits(createLocalStorageVisitsGateway(localStorage));
 }
 
 function getTotalVisitsOnce(): Promise<number | null> {
