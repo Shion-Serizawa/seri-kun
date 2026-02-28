@@ -3,8 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { onRequestGet, onRequestPost } from './visits';
 
 type HandlerContext = Parameters<typeof onRequestGet>[0];
+type VisitsKv = NonNullable<HandlerContext['env']['VISITS_KV']>;
 
-class MockKvNamespace implements KVNamespace {
+class MockKvNamespace implements VisitsKv {
   private readonly store = new Map<string, string>();
   private failGet = false;
   private failPut = false;
@@ -34,30 +35,12 @@ class MockKvNamespace implements KVNamespace {
     }
     this.store.set(key, value);
   }
-
-  async getWithMetadata(
-    key: string,
-  ): Promise<KVNamespaceGetWithMetadataResult<unknown, string> | null> {
-    const value = this.store.get(key) ?? null;
-    if (value === null) {
-      return null;
-    }
-    return { value, metadata: null };
-  }
-
-  async delete(key: string): Promise<void> {
-    this.store.delete(key);
-  }
-
-  async list(): Promise<KVNamespaceListResult<unknown, string>> {
-    return { keys: [], list_complete: true, cursor: '' };
-  }
 }
 
 function createContext(options?: {
   method?: 'GET' | 'POST';
   headers?: Record<string, string>;
-  kv?: KVNamespace;
+  kv?: VisitsKv;
   env?: Record<string, string | undefined>;
 }): HandlerContext {
   const request = new Request('https://example.com/api/visits', {
@@ -99,7 +82,7 @@ describe('/api/visits function', () => {
       createContext({
         method: 'POST',
         kv,
-        headers: { 'cf-connecting-ip': '203.0.113.11' },
+        headers: { 'cf-connecting-ip': '203.0.113.11', origin: 'https://example.com' },
       }),
     );
 
@@ -116,7 +99,7 @@ describe('/api/visits function', () => {
       createContext({
         method: 'POST',
         kv,
-        headers: { 'cf-connecting-ip': '203.0.113.12' },
+        headers: { 'cf-connecting-ip': '203.0.113.12', origin: 'https://example.com' },
       }),
     );
 
@@ -124,12 +107,29 @@ describe('/api/visits function', () => {
     await expect(response.json()).resolves.toEqual({ error: 'rate_limited' });
   });
 
-  it('POST remains permissive when client IP is missing', async () => {
+  it('POST returns 429 when client IP is missing', async () => {
     const kv = new MockKvNamespace();
 
-    const response = await onRequestPost(createContext({ method: 'POST', kv }));
-    expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual({ total: 1 });
+    const response = await onRequestPost(
+      createContext({ method: 'POST', kv, headers: { origin: 'https://example.com' } }),
+    );
+    expect(response.status).toBe(429);
+    await expect(response.json()).resolves.toEqual({ error: 'rate_limited' });
+  });
+
+  it('POST returns 403 for cross-origin requests', async () => {
+    const kv = new MockKvNamespace();
+
+    const response = await onRequestPost(
+      createContext({
+        method: 'POST',
+        kv,
+        headers: { 'cf-connecting-ip': '203.0.113.14', origin: 'https://attacker.example' },
+      }),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({ error: 'forbidden' });
   });
 
   it('POST returns 500 when KV access throws', async () => {
@@ -140,7 +140,7 @@ describe('/api/visits function', () => {
       createContext({
         method: 'POST',
         kv,
-        headers: { 'cf-connecting-ip': '203.0.113.13' },
+        headers: { 'cf-connecting-ip': '203.0.113.13', origin: 'https://example.com' },
       }),
     );
 
