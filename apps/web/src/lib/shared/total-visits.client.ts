@@ -1,35 +1,15 @@
-import { formatTotal, isVisitsResponse } from './total-visits';
+import { formatTotal } from './total-visits';
+import { createHttpVisitsGateway, loadTotalVisits } from './visits-gateway';
 
 let totalVisitsPromise: Promise<number | null> | null = null;
-
-async function requestVisitsWithMethod(method: 'GET' | 'POST'): Promise<number | null> {
-  const response = await fetch('/api/visits', {
-    method,
-    headers: {
-      Accept: 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    return null;
-  }
-
-  const parsed: unknown = await response.json();
-  if (!isVisitsResponse(parsed)) {
-    return null;
-  }
-
-  return parsed.total;
-}
+const gateway = createHttpVisitsGateway({
+  request(input, init) {
+    return fetch(input, init);
+  },
+});
 
 async function requestTotalVisits(): Promise<number | null> {
-  const incremented = await requestVisitsWithMethod('POST');
-  if (typeof incremented === 'number') {
-    return incremented;
-  }
-
-  // If increment fails (e.g. rate-limited), fall back to reading the latest value.
-  return requestVisitsWithMethod('GET');
+  return loadTotalVisits(gateway);
 }
 
 function getTotalVisitsOnce(): Promise<number | null> {
@@ -44,7 +24,7 @@ function getTotalVisitsOnce(): Promise<number | null> {
   return totalVisitsPromise;
 }
 
-async function updateTotalVisits(): Promise<void> {
+export async function updateTotalVisits(): Promise<void> {
   const values = document.querySelectorAll<HTMLElement>('[data-total-visits-value]');
   if (values.length === 0) {
     return;
@@ -62,5 +42,3 @@ async function updateTotalVisits(): Promise<void> {
     value.setAttribute('aria-label', `Total visits ${formatted}`);
   }
 }
-
-void updateTotalVisits();

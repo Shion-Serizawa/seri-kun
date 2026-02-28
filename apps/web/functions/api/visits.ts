@@ -1,24 +1,26 @@
 /// <reference types="@cloudflare/workers-types" />
 
 import type { VisitsResponse } from '../../src/lib/shared/total-visits';
+import {
+  createInMemoryKeyValueStore,
+  createVisitsStore,
+  type KeyValueStore,
+  type VisitsStore,
+} from './visits-store';
 
-const VISITS_KEY = 'site:total_visits';
-const VISITS_IP_KEY_PREFIX = 'visits:ip:';
 const VISITS_IP_TTL_SECONDS = 60;
 
 type ErrorResponse = { error: 'server_error' | 'rate_limited' | 'forbidden' };
 
-interface VisitsKv {
-  get(key: string): Promise<string | null>;
-  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
-}
-
 interface Env {
-  VISITS_KV?: VisitsKv;
+  VISITS_KV?: KeyValueStore;
   IS_DEV?: string;
   ENV?: string;
   NODE_ENV?: string;
+  VISITS_LOCAL_STORE?: string;
 }
+
+const localDevelopmentStore = createVisitsStore(createInMemoryKeyValueStore());
 
 function createJsonResponse(status: number, body: VisitsResponse | ErrorResponse): Response {
   return new Response(JSON.stringify(body), {
@@ -28,36 +30,6 @@ function createJsonResponse(status: number, body: VisitsResponse | ErrorResponse
       'Cache-Control': 'no-store',
     },
   });
-}
-
-function parseStoredVisits(raw: string | null): number {
-  if (raw === null) {
-    return 0;
-  }
-
-  const parsed = Number.parseInt(raw, 10);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return 0;
-  }
-
-  return parsed;
-}
-
-async function readTotal(kv: VisitsKv): Promise<number> {
-  const current = await kv.get(VISITS_KEY);
-  return parseStoredVisits(current);
-}
-
-async function incrementAndReadTotal(kv: VisitsKv): Promise<number> {
-  // KV has no atomic increment; this read-modify-write is acceptable for low traffic.
-  const current = await readTotal(kv);
-  const next = current + 1;
-  await kv.put(VISITS_KEY, String(next));
-  return next;
-}
-
-function requireKvBinding(env: Env): VisitsKv | null {
-  return env.VISITS_KV ?? null;
 }
 
 type FunctionContext = Parameters<PagesFunction<Env>>[0];
@@ -83,19 +55,25 @@ function getClientIp(request: Request): string | null {
   return cfConnectingIp || null;
 }
 
-function toRateLimitKey(ip: string): string {
-  return `${VISITS_IP_KEY_PREFIX}${encodeURIComponent(ip)}`;
+function isLocalHostname(request: Request): boolean {
+  const hostname = new URL(request.url).hostname;
+  return hostname === 'localhost' || hostname === '127.0.0.1';
 }
 
-async function isRateLimited(kv: VisitsKv, ip: string): Promise<boolean> {
-  const key = toRateLimitKey(ip);
-  const existing = await kv.get(key);
-  if (existing !== null) {
-    return true;
+function resolveVisitsStore(context: FunctionContext): VisitsStore | null {
+  if (context.env.VISITS_KV) {
+    return createVisitsStore(context.env.VISITS_KV);
   }
 
-  await kv.put(key, '1', { expirationTtl: VISITS_IP_TTL_SECONDS });
-  return false;
+  if (context.env.VISITS_LOCAL_STORE === 'memory') {
+    return localDevelopmentStore;
+  }
+
+  if (isLocalHostname(context.request)) {
+    return localDevelopmentStore;
+  }
+
+  return null;
 }
 
 function parseOrigin(value: string | null): string | null {
@@ -127,13 +105,13 @@ function isSameOriginRequest(request: Request): boolean {
 }
 
 export const onRequestGet: PagesFunction<Env> = async (context): Promise<Response> => {
-  const kv = requireKvBinding(context.env);
-  if (kv === null) {
+  const store = resolveVisitsStore(context);
+  if (store === null) {
     return createJsonResponse(500, { error: 'server_error' });
   }
 
   try {
-    const total = await readTotal(kv);
+    const total = await store.readTotal();
     return createJsonResponse(200, { total });
   } catch (error: unknown) {
     logServerError(context, 'Failed to read total visits', error);
@@ -142,8 +120,8 @@ export const onRequestGet: PagesFunction<Env> = async (context): Promise<Respons
 };
 
 export const onRequestPost: PagesFunction<Env> = async (context): Promise<Response> => {
-  const kv = requireKvBinding(context.env);
-  if (kv === null) {
+  const store = resolveVisitsStore(context);
+  if (store === null) {
     return createJsonResponse(500, { error: 'server_error' });
   }
 
@@ -157,12 +135,12 @@ export const onRequestPost: PagesFunction<Env> = async (context): Promise<Respon
       return createJsonResponse(429, { error: 'rate_limited' });
     }
 
-    const limited = await isRateLimited(kv, clientIp);
+    const limited = await store.isRateLimited(clientIp, VISITS_IP_TTL_SECONDS);
     if (limited) {
       return createJsonResponse(429, { error: 'rate_limited' });
     }
 
-    const total = await incrementAndReadTotal(kv);
+    const total = await store.incrementTotal();
     return createJsonResponse(200, { total });
   } catch (error: unknown) {
     logServerError(context, 'Failed to increment total visits', error);

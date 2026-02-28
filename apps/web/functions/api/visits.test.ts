@@ -39,11 +39,12 @@ class MockKvNamespace implements VisitsKv {
 
 function createContext(options?: {
   method?: 'GET' | 'POST';
+  url?: string;
   headers?: Record<string, string>;
   kv?: VisitsKv;
   env?: Record<string, string | undefined>;
 }): HandlerContext {
-  const request = new Request('https://example.com/api/visits', {
+  const request = new Request(options?.url ?? 'https://example.com/api/visits', {
     method: options?.method ?? 'GET',
     headers: options?.headers,
   });
@@ -72,6 +73,14 @@ describe('/api/visits function', () => {
     const response = await onRequestGet(createContext({ method: 'GET' }));
     expect(response.status).toBe(500);
     await expect(response.json()).resolves.toEqual({ error: 'server_error' });
+  });
+
+  it('GET returns total with local memory store when request is localhost', async () => {
+    const response = await onRequestGet(
+      createContext({ method: 'GET', url: 'http://127.0.0.1:8788/api/visits' }),
+    );
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ total: expect.any(Number) });
   });
 
   it('POST increments total and returns new value', async () => {
