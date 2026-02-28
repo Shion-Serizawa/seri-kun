@@ -2,9 +2,9 @@ import { formatTotal, isVisitsResponse } from './total-visits';
 
 let totalVisitsPromise: Promise<number | null> | null = null;
 
-async function requestTotalVisits(): Promise<number | null> {
+async function requestVisitsWithMethod(method: 'GET' | 'POST'): Promise<number | null> {
   const response = await fetch('/api/visits', {
-    method: 'POST',
+    method,
     headers: {
       Accept: 'application/json',
     },
@@ -20,6 +20,16 @@ async function requestTotalVisits(): Promise<number | null> {
   }
 
   return parsed.total;
+}
+
+async function requestTotalVisits(): Promise<number | null> {
+  const incremented = await requestVisitsWithMethod('POST');
+  if (typeof incremented === 'number') {
+    return incremented;
+  }
+
+  // If increment fails (e.g. rate-limited), fall back to reading the latest value.
+  return requestVisitsWithMethod('GET');
 }
 
 function getTotalVisitsOnce(): Promise<number | null> {
