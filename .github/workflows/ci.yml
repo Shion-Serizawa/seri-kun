@@ -17,10 +17,15 @@ on:
       - "mise.toml"
       - ".github/workflows/**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   web:
     name: Web CI
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       ASTRO_TELEMETRY_DISABLED: "1"
     defaults:
