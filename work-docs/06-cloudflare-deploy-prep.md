@@ -13,6 +13,9 @@
 3. コンテンツを詰める
 4. ドメイン取得・接続して差し替え
 
+記法:
+- `<REPO_ROOT>` はこのリポジトリのルートディレクトリを指す
+
 ---
 
 ## 1. 最初に決めること（重要）
@@ -56,7 +59,7 @@ Cloudflare Pages のプロジェクト作成方式は実質的に固定される
 リポジトリルートで:
 
 ```powershell
-cd d:\Shion\work2\typescript\seri-kun
+cd <REPO_ROOT>
 mise exec -- pnpm -C apps/web install --frozen-lockfile
 mise exec -- pnpm -C apps/web exec wrangler login
 mise exec -- pnpm -C apps/web exec wrangler pages project create <PROJECT_NAME> --production-branch main
@@ -93,7 +96,7 @@ mise exec -- pnpm -C apps/web exec wrangler pages project create <PROJECT_NAME> 
 リポジトリルートで:
 
 ```powershell
-cd d:\Shion\work2\typescript\seri-kun
+cd <REPO_ROOT>
 mise exec -- pnpm -C apps/web install --frozen-lockfile
 mise exec -- pnpm -C apps/web gen:meta
 mise exec -- pnpm -C apps/web build
@@ -136,7 +139,7 @@ mise exec -- pnpm -C apps/web exec wrangler pages deploy dist --project-name <PR
 手順（リポジトリルート）:
 
 ```powershell
-cd d:\Shion\work2\typescript\seri-kun
+cd <REPO_ROOT>
 mise exec -- pnpm -C apps/web install --frozen-lockfile
 mise exec -- pnpm -C apps/web build:e2e
 $env:VISITS_LOCAL_STORE='memory'
@@ -151,7 +154,7 @@ mise exec -- pnpm -C apps/web exec wrangler pages dev dist --port 8788 --ip 127.
 自動テスト:
 
 ```powershell
-cd d:\Shion\work2\typescript\seri-kun
+cd <REPO_ROOT>
 mise exec -- pnpm -C apps/web test
 ```
 

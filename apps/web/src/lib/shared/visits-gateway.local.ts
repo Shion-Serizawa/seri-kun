@@ -1,23 +1,11 @@
 import type { VisitsGateway } from './visits-gateway';
+import { parseStoredVisits } from './parse-stored-visits';
 
 const DEV_VISITS_STORAGE_KEY = 'seri-kun:total-visits:dev';
 
 interface StorageLike {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
-}
-
-function parseStoredVisits(raw: string | null): number {
-  if (raw === null) {
-    return 0;
-  }
-
-  const parsed = Number.parseInt(raw, 10);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return 0;
-  }
-
-  return parsed;
 }
 
 export function createLocalStorageVisitsGateway(

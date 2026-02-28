@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { onRequestGet, onRequestPost } from './visits';
+import type { KeyValueStore } from './visits-store';
 
 type HandlerContext = Parameters<typeof onRequestGet>[0];
-type VisitsKv = NonNullable<HandlerContext['env']['VISITS_KV']>;
 
-class MockKvNamespace implements VisitsKv {
+class MockKvNamespace implements KeyValueStore {
   private readonly store = new Map<string, string>();
   private failGet = false;
   private failPut = false;
@@ -41,7 +41,7 @@ function createContext(options?: {
   method?: 'GET' | 'POST';
   url?: string;
   headers?: Record<string, string>;
-  kv?: VisitsKv;
+  kv?: KeyValueStore;
   env?: Record<string, string | undefined>;
 }): HandlerContext {
   const request = new Request(options?.url ?? 'https://example.com/api/visits', {

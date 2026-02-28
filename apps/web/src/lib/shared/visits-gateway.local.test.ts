@@ -32,10 +32,25 @@ describe('createLocalStorageVisitsGateway', () => {
     await expect(gateway.incrementAndReadTotal()).resolves.toBe(1);
   });
 
-  it('returns null when storage operations throw', async () => {
+  it('returns null when getItem throws', async () => {
     const storage = {
       getItem(): string | null {
         throw new Error('read failed');
+      },
+      setItem(): void {
+        // no-op
+      },
+    };
+    const gateway = createLocalStorageVisitsGateway(storage, 'test:visits');
+
+    await expect(gateway.incrementAndReadTotal()).resolves.toBeNull();
+    await expect(gateway.readTotal()).resolves.toBeNull();
+  });
+
+  it('returns null from increment when setItem throws', async () => {
+    const storage = {
+      getItem(): string | null {
+        return '1';
       },
       setItem(): void {
         throw new Error('write failed');
@@ -44,6 +59,6 @@ describe('createLocalStorageVisitsGateway', () => {
     const gateway = createLocalStorageVisitsGateway(storage, 'test:visits');
 
     await expect(gateway.incrementAndReadTotal()).resolves.toBeNull();
-    await expect(gateway.readTotal()).resolves.toBeNull();
+    await expect(gateway.readTotal()).resolves.toBe(1);
   });
 });

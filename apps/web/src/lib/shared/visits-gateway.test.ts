@@ -52,10 +52,12 @@ describe('createHttpVisitsGateway', () => {
     const request = vi
       .fn()
       .mockResolvedValueOnce(new Response('forbidden', { status: 403 }))
+      .mockResolvedValueOnce(new Response('not-json', { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({ total: 'invalid' }), { status: 200 }));
     const gateway = createHttpVisitsGateway({ request });
 
     await expect(gateway.incrementAndReadTotal()).resolves.toBeNull();
+    await expect(gateway.readTotal()).resolves.toBeNull();
     await expect(gateway.readTotal()).resolves.toBeNull();
   });
 });

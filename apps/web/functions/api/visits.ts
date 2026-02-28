@@ -13,7 +13,7 @@ const VISITS_IP_TTL_SECONDS = 60;
 type ErrorResponse = { error: 'server_error' | 'rate_limited' | 'forbidden' };
 
 interface Env {
-  VISITS_KV?: KeyValueStore;
+  VISITS_KV?: KVNamespace;
   IS_DEV?: string;
   ENV?: string;
   NODE_ENV?: string;
@@ -60,9 +60,20 @@ function isLocalHostname(request: Request): boolean {
   return hostname === 'localhost' || hostname === '127.0.0.1';
 }
 
+function adaptKvNamespace(kv: KVNamespace): KeyValueStore {
+  return {
+    get(key: string): Promise<string | null> {
+      return kv.get(key, 'text');
+    },
+    put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void> {
+      return kv.put(key, value, options);
+    },
+  };
+}
+
 function resolveVisitsStore(context: FunctionContext): VisitsStore | null {
   if (context.env.VISITS_KV) {
-    return createVisitsStore(context.env.VISITS_KV);
+    return createVisitsStore(adaptKvNamespace(context.env.VISITS_KV));
   }
 
   if (context.env.VISITS_LOCAL_STORE === 'memory') {

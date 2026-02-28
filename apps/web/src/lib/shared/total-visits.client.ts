@@ -10,7 +10,12 @@ const gateway = createHttpVisitsGateway({
 });
 
 async function requestTotalVisits(): Promise<number | null> {
-  const total = await loadTotalVisits(gateway);
+  let total: number | null = null;
+  try {
+    total = await loadTotalVisits(gateway);
+  } catch {
+    total = null;
+  }
   if (typeof total === 'number') {
     return total;
   }
@@ -24,7 +29,11 @@ async function requestTotalVisits(): Promise<number | null> {
     return null;
   }
 
-  return loadTotalVisits(createLocalStorageVisitsGateway(localStorage));
+  try {
+    return await loadTotalVisits(createLocalStorageVisitsGateway(localStorage));
+  } catch {
+    return null;
+  }
 }
 
 function getTotalVisitsOnce(): Promise<number | null> {

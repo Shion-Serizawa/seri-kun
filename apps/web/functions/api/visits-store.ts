@@ -1,3 +1,5 @@
+import { parseStoredVisits } from '../../src/lib/shared/parse-stored-visits';
+
 const VISITS_KEY = 'site:total_visits';
 const VISITS_IP_KEY_PREFIX = 'visits:ip:';
 
@@ -15,19 +17,6 @@ export interface VisitsStore {
 interface InMemoryEntry {
   value: string;
   expiresAtMs: number | null;
-}
-
-function parseStoredVisits(raw: string | null): number {
-  if (raw === null) {
-    return 0;
-  }
-
-  const parsed = Number.parseInt(raw, 10);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return 0;
-  }
-
-  return parsed;
 }
 
 function toRateLimitKey(ip: string): string {

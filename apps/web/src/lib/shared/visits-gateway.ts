@@ -14,7 +14,12 @@ async function parseVisitsResponse(response: Response): Promise<number | null> {
     return null;
   }
 
-  const parsed: unknown = await response.json();
+  let parsed: unknown;
+  try {
+    parsed = await response.json();
+  } catch {
+    return null;
+  }
   if (!isVisitsResponse(parsed)) {
     return null;
   }
