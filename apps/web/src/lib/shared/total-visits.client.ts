@@ -1,25 +1,39 @@
-import { formatTotal, isVisitsResponse } from './total-visits';
+import { formatTotal } from './total-visits';
+import { createHttpVisitsGateway, loadTotalVisits } from './visits-gateway';
+import { createLocalStorageVisitsGateway, resolveBrowserLocalStorage } from './visits-gateway.local';
 
 let totalVisitsPromise: Promise<number | null> | null = null;
+const gateway = createHttpVisitsGateway({
+  request(input, init) {
+    return fetch(input, init);
+  },
+});
 
 async function requestTotalVisits(): Promise<number | null> {
-  const response = await fetch('/api/visits', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-    },
-  });
+  let total: number | null = null;
+  try {
+    total = await loadTotalVisits(gateway);
+  } catch {
+    total = null;
+  }
+  if (typeof total === 'number') {
+    return total;
+  }
 
-  if (!response.ok) {
+  if (!import.meta.env.DEV) {
     return null;
   }
 
-  const parsed: unknown = await response.json();
-  if (!isVisitsResponse(parsed)) {
+  const localStorage = resolveBrowserLocalStorage();
+  if (!localStorage) {
     return null;
   }
 
-  return parsed.total;
+  try {
+    return await loadTotalVisits(createLocalStorageVisitsGateway(localStorage));
+  } catch {
+    return null;
+  }
 }
 
 function getTotalVisitsOnce(): Promise<number | null> {
@@ -34,7 +48,7 @@ function getTotalVisitsOnce(): Promise<number | null> {
   return totalVisitsPromise;
 }
 
-async function updateTotalVisits(): Promise<void> {
+export async function updateTotalVisits(): Promise<void> {
   const values = document.querySelectorAll<HTMLElement>('[data-total-visits-value]');
   if (values.length === 0) {
     return;
@@ -52,5 +66,3 @@ async function updateTotalVisits(): Promise<void> {
     value.setAttribute('aria-label', `Total visits ${formatted}`);
   }
 }
-
-void updateTotalVisits();

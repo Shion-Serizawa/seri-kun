@@ -23,6 +23,10 @@ export default defineConfig({
   ],
   webServer: {
     command: `npm run build:e2e && npx wrangler pages dev dist --port ${port} --ip 127.0.0.1`,
+    env: {
+      ...process.env,
+      VISITS_LOCAL_STORE: 'memory',
+    },
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

@@ -6,6 +6,18 @@ test('home page renders', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: 'seri-kun' })).toBeVisible();
 });
 
+test('total visits is rendered as a number', async ({ page }) => {
+  const response = await page.goto('/');
+  expect(response?.status()).toBe(200);
+
+  await expect
+    .poll(async () => {
+      const text = await page.locator('[data-total-visits-value]').first().textContent();
+      return text?.trim() ?? '';
+    })
+    .toMatch(/^\d[\d,]*$/);
+});
+
 test('works page renders', async ({ page }) => {
   const response = await page.goto('/works');
   expect(response?.status()).toBe(200);
