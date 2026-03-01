@@ -1,23 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { doingNow, skills, socialLinks, timeline } from '../data/profile';
+import { doingNow, skills, socialLinks, timelineSnapshot } from '../data/profile';
+import './index.css';
 ---
 
 <BaseLayout title="Home | seri." description="seri. のポートフォリオサイト">
-  <section class="home-hero">
-    <div class="home-kicker">Personal Studio</div>
+  <section class="homeHero">
+    <div class="homeKicker">Personal Studio</div>
     <h1>seri.</h1>
-    <p class="home-statement">生きろ。</p>
+    <p class="homeStatement">生きろ。</p>
 
-    <div class="home-cta">
-      <a class="home-btn home-btn-primary" href="/works">Works を見る</a>
-      <a class="home-btn home-btn-ghost" href="/profile">Profile を見る</a>
-      <a class="home-btn home-btn-ghost" href="/blog">Blog を読む</a>
+    <div class="homeCta">
+      <a class="homeBtn homeBtnPrimary" href="/works">Works を見る</a>
+      <a class="homeBtn homeBtnGhost" href="/profile">Profile を見る</a>
+      <a class="homeBtn homeBtnGhost" href="/blog">Blog を読む</a>
     </div>
 
-    <nav class="home-social" aria-label="Social links">
+    <nav class="homeSocial" aria-label="Social links">
       <a
-        class="home-icon-link"
+        class="homeIconLink"
         href={socialLinks.x}
         target="_blank"
         rel="noopener noreferrer"
@@ -30,7 +31,7 @@ import { doingNow, skills, socialLinks, timeline } from '../data/profile';
         </svg>
       </a>
       <a
-        class="home-icon-link"
+        class="homeIconLink"
         href={socialLinks.github}
         target="_blank"
         rel="noopener noreferrer"
@@ -45,10 +46,10 @@ import { doingNow, skills, socialLinks, timeline } from '../data/profile';
     </nav>
   </section>
 
-  <section class="home-mosaic" aria-label="Home summary">
-    <article class="home-panel">
+  <section class="homeMosaic" aria-label="Home summary">
+    <article class="homePanel">
       <h2>Doing</h2>
-      <ul class="home-doing-list">
+      <ul class="homeDoingList">
         {doingNow.map((item, index) => (
           <li style={`--stagger:${index};`}>
             <span>{item}</span>
@@ -57,303 +58,32 @@ import { doingNow, skills, socialLinks, timeline } from '../data/profile';
       </ul>
     </article>
 
-    <article class="home-panel home-panel-timeline">
+    <article class="homePanel homePanelTimeline">
       <h2>Profile Snapshot</h2>
       <ol>
-        {timeline.slice(2).map((item) => (
+        {timelineSnapshot.map((item) => (
           <li>
-            <span class="home-when">{item.age}</span>
+            <span class="homeWhen">{item.age}</span>
             <span>{item.event}</span>
           </li>
         ))}
       </ol>
-      <a class="home-text-link" href="/profile">
+      <a class="homeTextLink" href="/profile">
         詳細プロフィールを見る
       </a>
     </article>
 
-    <article class="home-panel home-panel-skills">
+    <article class="homePanel homePanelSkills">
       <h2>Skills</h2>
-      <p class="home-label">得意</p>
-      <ul class="home-chips">
+      <p class="homeLabel">得意</p>
+      <ul class="homeChips">
         {skills.strong.map((item) => <li>{item}</li>)}
       </ul>
 
-      <p class="home-label">できる</p>
-      <ul class="home-chips">
+      <p class="homeLabel">できる</p>
+      <ul class="homeChips">
         {skills.practical.map((item) => <li>{item}</li>)}
       </ul>
     </article>
   </section>
-
-  <style>
-    .home-hero {
-      padding: clamp(1.3rem, 3vw, 2rem);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background:
-        linear-gradient(130deg, color-mix(in srgb, var(--surface) 92%, transparent), transparent 65%),
-        linear-gradient(210deg, color-mix(in srgb, var(--bg) 62%, transparent), transparent 60%);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .home-hero::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      background:
-        radial-gradient(560px 250px at 10% -15%, color-mix(in srgb, var(--link) 28%, transparent), transparent 58%),
-        radial-gradient(480px 240px at 95% 8%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 56%);
-      pointer-events: none;
-    }
-
-    .home-hero > * {
-      position: relative;
-    }
-
-    .home-kicker {
-      font-family: var(--font-mono);
-      letter-spacing: 0.17em;
-      text-transform: uppercase;
-      font-size: 0.74rem;
-      color: var(--muted);
-      margin-bottom: 0.6rem;
-    }
-
-    .home-statement {
-      margin-top: 0.45rem;
-      margin-bottom: 0;
-      max-width: 34ch;
-      font-size: clamp(1rem, 0.95rem + 0.45vw, 1.2rem);
-      color: color-mix(in srgb, var(--fg) 86%, transparent);
-    }
-
-    .home-cta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1.2rem;
-    }
-
-    .home-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.6rem;
-      padding: 0.55rem 0.95rem;
-      border-radius: 0.8rem;
-      border: 1px solid var(--border);
-      text-decoration: none;
-      font-weight: 630;
-      transition:
-        transform 180ms ease,
-        border-color 180ms ease,
-        background-color 180ms ease;
-    }
-
-    .home-btn:hover,
-    .home-btn:focus-visible {
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .home-btn-primary {
-      background: linear-gradient(120deg, var(--link), color-mix(in srgb, var(--accent) 75%, var(--link)));
-      color: color-mix(in srgb, var(--bg) 94%, transparent);
-      border-color: color-mix(in srgb, var(--fg) 22%, transparent);
-    }
-
-    .home-btn-ghost {
-      background: color-mix(in srgb, var(--surface) 64%, transparent);
-      color: var(--fg);
-    }
-
-    .home-social {
-      margin-top: 1.15rem;
-      display: flex;
-      gap: 0.6rem;
-    }
-
-    .home-icon-link {
-      width: 2.2rem;
-      height: 2.2rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.66rem;
-      border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent);
-      background: color-mix(in srgb, var(--bg) 58%, transparent);
-      color: var(--fg);
-      text-decoration: none;
-      transition:
-        transform 160ms ease,
-        background-color 160ms ease,
-        border-color 160ms ease;
-    }
-
-    .home-icon-link:hover,
-    .home-icon-link:focus-visible {
-      transform: translateY(-1px);
-      background: color-mix(in srgb, var(--surface) 75%, transparent);
-      border-color: color-mix(in srgb, var(--link) 60%, var(--border));
-      outline: none;
-    }
-
-    .home-icon-link svg {
-      display: block;
-      width: 1rem;
-      height: 1rem;
-      fill: currentColor;
-    }
-
-    .home-mosaic {
-      margin-top: 1.3rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.9rem;
-    }
-
-    .home-panel {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: color-mix(in srgb, var(--surface) 72%, transparent);
-      box-shadow: var(--shadow);
-      padding: 1rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .home-panel::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--link) 8%, transparent) 0%,
-        transparent 45%,
-        color-mix(in srgb, var(--accent) 10%, transparent) 100%
-      );
-      pointer-events: none;
-    }
-
-    .home-panel > * {
-      position: relative;
-    }
-
-    .home-panel h2 {
-      margin: 0 0 0.8rem;
-      font-size: clamp(1.2rem, 1.1rem + 0.4vw, 1.45rem);
-    }
-
-    .home-doing-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 0.45rem;
-    }
-
-    .home-doing-list li {
-      border-left: 2px solid color-mix(in srgb, var(--link) 68%, transparent);
-      padding: 0.38rem 0.5rem 0.38rem 0.75rem;
-      background: color-mix(in srgb, var(--bg) 56%, transparent);
-      animation: home-rise-in 420ms ease both;
-      animation-delay: calc(var(--stagger) * 58ms);
-    }
-
-    .home-panel-timeline ol {
-      margin: 0;
-      padding-left: 1rem;
-      display: grid;
-      gap: 0.4rem;
-    }
-
-    .home-panel-timeline li {
-      display: grid;
-      gap: 0.08rem;
-    }
-
-    .home-when {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-
-    .home-text-link {
-      display: inline-block;
-      margin-top: 0.85rem;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .home-text-link:hover {
-      text-decoration: underline;
-    }
-
-    .home-label {
-      margin: 0.1rem 0 0.45rem;
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-
-    .home-chips {
-      list-style: none;
-      margin: 0 0 0.85rem;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.44rem;
-    }
-
-    .home-chips li {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.28rem 0.46rem;
-      border-radius: 0.45rem;
-      border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--bg) 64%, transparent);
-    }
-
-    @media (min-width: 52rem) {
-      .home-mosaic {
-        grid-template-columns: 1.1fr 1fr;
-      }
-
-      .home-panel-skills {
-        grid-column: span 2;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .home-btn,
-      .home-icon-link {
-        transition: none;
-      }
-
-      .home-btn:hover,
-      .home-btn:focus-visible,
-      .home-icon-link:hover,
-      .home-icon-link:focus-visible {
-        transform: none;
-      }
-
-      .home-doing-list li {
-        animation: none;
-      }
-    }
-
-    @keyframes home-rise-in {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
 </BaseLayout>

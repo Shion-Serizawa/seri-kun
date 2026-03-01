@@ -19,6 +19,8 @@ export const timeline = [
   { age: '22歳', event: '地元のIT企業に就職' },
 ] as const;
 
+export const timelineSnapshot = timeline.slice(2);
+
 export const skills = {
   strong: ['Java', 'MySQL', 'AI Coding (Claude Code, SDD)'],
   practical: ['Git', 'Docker', 'Python', 'Cloudflare Pages', 'Unix系'],
@@ -57,5 +59,5 @@ export const mainPc = [
   { part: '電源', spec: 'Corsair CX650M 650W' },
   { part: 'マザーボード', spec: 'ASUS PRIME B660M-A D4' },
   { part: 'メモリ', spec: 'Crucial 16GB (8GBx2) DDR4-3200' },
-  { part: 'ケース', spec: 'Deepcool MACUBE 110' },
+  { part: 'ケース', spec: 'DEEPCOOL MACUBE 110' },
 ] as const;
