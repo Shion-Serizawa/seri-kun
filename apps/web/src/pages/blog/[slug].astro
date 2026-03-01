@@ -72,3 +72,22 @@ const shouldShowUpdatedAt = updatedAtDate !== null && updatedAtDate !== entry.da
     </div>
   </article>
 </BaseLayout>
+
+<script>
+  import mermaid from 'mermaid';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'neutral',
+    flowchart: {
+      htmlLabels: true,
+      useMaxWidth: true,
+      nodeSpacing: 28,
+      rankSpacing: 40,
+    },
+    themeVariables: {
+      fontFamily:
+        "'Yu Gothic', 'Yu Gothic UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, ui-sans-serif, system-ui, sans-serif",
+      fontSize: '14px',
+    },
+  });
+</script>
