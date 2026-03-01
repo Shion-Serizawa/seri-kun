@@ -26,6 +26,9 @@ jobs:
     name: Web CI
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      deployments: write
     env:
       ASTRO_TELEMETRY_DISABLED: "1"
     defaults:
@@ -72,3 +75,22 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: "4.63.0"
+          workingDirectory: apps/web
+          packageManager: pnpm
+          command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }} --branch=main
+
+      - name: Show deployment URL
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          echo "Deployment URL: ${{ steps.deploy.outputs.deployment-url }}"
+          echo "Deployment Alias: ${{ steps.deploy.outputs.pages-deployment-alias-url }}"
