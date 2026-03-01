@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { hobbyHighlights, mainPc, skills, socialLinks, timeline, travelPlaces } from '../data/profile';
+import styles from './profile.module.css';
+---
+
+<BaseLayout title="Profile | seri." description="seri. のプロフィール">
+  <section class={styles.hero}>
+    <p class={styles.kicker}>About</p>
+    <h1>Profile</h1>
+    <p class={styles.lead}>基礎をしっかり学び、保守性・可読性の高いコード。趣味と内向きツールは気軽に。</p>
+
+    <nav class={styles.socialLinks} aria-label="Profile social links">
+      <a class={styles.socialLink} href={socialLinks.x} target="_blank" rel="noopener noreferrer">
+        X (Twitter)
+      </a>
+      <a class={styles.socialLink} href={socialLinks.github} target="_blank" rel="noopener noreferrer">
+        GitHub
+      </a>
+    </nav>
+  </section>
+
+  <section class={styles.grid}>
+    <article class={styles.card}>
+      <h2>経歴</h2>
+      <ol class={styles.timeline}>
+        {timeline.map((item) => (
+          <li>
+            <span class={styles.age}>{item.age}</span>
+            <span>{item.event}</span>
+          </li>
+        ))}
+      </ol>
+    </article>
+
+    <article class={styles.card}>
+      <h2>スキル</h2>
+      <p class={styles.skillLabel}>得意</p>
+      <ul class={styles.chips}>
+        {skills.strong.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <p class={styles.skillLabel}>できる</p>
+      <ul class={styles.chips}>
+        {skills.practical.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <p class={styles.skillLabel}>触ったことがある</p>
+      <ul class={styles.chips}>
+        {skills.explored.map((item) => <li>{item}</li>)}
+      </ul>
+    </article>
+
+    <article class={`${styles.card} ${styles.wide}`}>
+      <h2>趣味</h2>
+      <div class={styles.hobbyGrid}>
+        <section class={styles.travelBoard} aria-label="Travel">
+          <div class={styles.travelHead}>
+            <h3>Travel</h3>
+          </div>
+          <ul class={styles.travelTags}>
+            {travelPlaces.map((place) => <li>{place}</li>)}
+          </ul>
+        </section>
+
+        <div class={styles.hobbyPanels}>
+          {hobbyHighlights.map((item) => (
+            <section class={styles.hobbyPanel}>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+            </section>
+          ))}
+        </div>
+      </div>
+    </article>
+
+    <article class={`${styles.card} ${styles.wide}`}>
+      <h2>メインPC</h2>
+      <dl class={styles.specs}>
+        {mainPc.map((item) => (
+          <>
+            <dt>{item.part}</dt>
+            <dd>{item.spec}</dd>
+          </>
+        ))}
+      </dl>
+    </article>
+  </section>
+</BaseLayout>

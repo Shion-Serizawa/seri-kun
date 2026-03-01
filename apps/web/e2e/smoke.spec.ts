@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('home page renders', async ({ page }) => {
   const response = await page.goto('/');
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole('heading', { level: 1, name: 'seri-kun' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'seri.' })).toBeVisible();
 });
 
 test('total visits is rendered as a number', async ({ page }) => {
