@@ -61,3 +61,7 @@ export async function loadTotalVisits(gateway: VisitsGateway): Promise<number | 
 
   return gateway.readTotal();
 }
+
+export async function readTotalVisits(gateway: VisitsGateway): Promise<number | null> {
+  return gateway.readTotal();
+}
