@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 
-const pageTitle = `${entry.data.title} | Blog | seri-kun`;
+const pageTitle = `${entry.data.title} | Blog | seri.`;
 const description = entry.data.description;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
 const updatedAtLoader = createFileUpdatedAtLoader(getDefaultBlogUpdatedAtFilePath());

@@ -1,0 +1,277 @@
+.homeHero {
+  padding: clamp(1.3rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(130deg, color-mix(in srgb, var(--surface) 92%, transparent), transparent 65%),
+    linear-gradient(210deg, color-mix(in srgb, var(--bg) 62%, transparent), transparent 60%);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.homeHero::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background:
+    radial-gradient(560px 250px at 10% -15%, color-mix(in srgb, var(--link) 28%, transparent), transparent 58%),
+    radial-gradient(480px 240px at 95% 8%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 56%);
+  pointer-events: none;
+}
+
+.homeHero > * {
+  position: relative;
+}
+
+.homeKicker {
+  font-family: var(--font-mono);
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.homeStatement {
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+  max-width: 34ch;
+  font-size: clamp(1rem, 0.95rem + 0.45vw, 1.2rem);
+  color: color-mix(in srgb, var(--fg) 86%, transparent);
+}
+
+.homeCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.homeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 0.8rem;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  font-weight: 630;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.homeBtn:hover {
+  transform: translateY(-1px);
+}
+
+.homeBtn:focus-visible,
+.homeIconLink:focus-visible {
+  transform: translateY(-1px);
+  outline: 2px solid color-mix(in srgb, var(--link) 75%, var(--accent));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--link) 24%, transparent);
+}
+
+.homeBtnPrimary {
+  background: linear-gradient(120deg, var(--link), color-mix(in srgb, var(--accent) 75%, var(--link)));
+  color: color-mix(in srgb, var(--bg) 94%, transparent);
+  border-color: color-mix(in srgb, var(--fg) 22%, transparent);
+}
+
+.homeBtnGhost {
+  background: color-mix(in srgb, var(--surface) 64%, transparent);
+  color: var(--fg);
+}
+
+.homeSocial {
+  margin-top: 1.15rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.homeIconLink {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.66rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent);
+  background: color-mix(in srgb, var(--bg) 58%, transparent);
+  color: var(--fg);
+  text-decoration: none;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.homeIconLink:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
+  border-color: color-mix(in srgb, var(--link) 60%, var(--border));
+}
+
+.homeIconLink:focus-visible {
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
+  border-color: color-mix(in srgb, var(--link) 60%, var(--border));
+}
+
+.homeIconLink svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  fill: currentcolor;
+}
+
+.homeMosaic {
+  margin-top: 1.3rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+.homePanel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.homePanel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--link) 8%, transparent) 0%,
+    transparent 45%,
+    color-mix(in srgb, var(--accent) 10%, transparent) 100%
+  );
+  pointer-events: none;
+}
+
+.homePanel > * {
+  position: relative;
+}
+
+.homePanel h2 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(1.2rem, 1.1rem + 0.4vw, 1.45rem);
+}
+
+.homeDoingList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.homeDoingList li {
+  border-left: 2px solid color-mix(in srgb, var(--link) 68%, transparent);
+  padding: 0.38rem 0.5rem 0.38rem 0.75rem;
+  background: color-mix(in srgb, var(--bg) 56%, transparent);
+  animation: home-rise-in 420ms ease both;
+  animation-delay: calc(var(--stagger) * 58ms);
+}
+
+.homePanelTimeline ol {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.homePanelTimeline li {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.homeWhen {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.homeTextLink {
+  display: inline-block;
+  margin-top: 0.85rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.homeTextLink:hover {
+  text-decoration: underline;
+}
+
+.homeLabel {
+  margin: 0.1rem 0 0.45rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.homeChips {
+  list-style: none;
+  margin: 0 0 0.85rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.44rem;
+}
+
+.homeChips li {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 0.28rem 0.46rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 64%, transparent);
+}
+
+@media (min-width: 52rem) {
+  .homeMosaic {
+    grid-template-columns: 1.1fr 1fr;
+  }
+
+  .homePanelSkills {
+    grid-column: span 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homeBtn,
+  .homeIconLink {
+    transition: none;
+  }
+
+  .homeBtn:hover,
+  .homeBtn:focus-visible,
+  .homeIconLink:hover,
+  .homeIconLink:focus-visible {
+    transform: none;
+  }
+
+  .homeDoingList li {
+    animation: none;
+  }
+}
+
+@keyframes home-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

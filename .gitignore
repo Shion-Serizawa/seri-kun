@@ -11,3 +11,9 @@ mise.*.local.toml
 
 # 一旦活用していないので、コミットしない。
 work-docs/codex-skills/
+
+/Shion-Serizawa.github.io
+.astro/
+
+# dependency/build caches
+node_modules/

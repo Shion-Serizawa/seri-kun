@@ -35,7 +35,7 @@ const cfAnalyticsBeacon =
         data-cf-beacon={cfAnalyticsBeacon}
       />
     ) : null}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -45,9 +45,10 @@ const cfAnalyticsBeacon =
         <div class={styles.headerInner}>
           <a class={styles.siteTitle} href="/">
             <span class={styles.siteTitleMark} aria-hidden="true"></span>
-            <span class={styles.siteTitleWord}>seri-kun</span>
+            <span class={styles.siteTitleWord}>seri.</span>
           </a>
           <nav class={styles.nav} aria-label="Primary">
+            <a class={styles.navLink} href="/profile">Profile</a>
             <a class={styles.navLink} href="/works">Works</a>
             <a class={styles.navLink} href="/blog">Blog</a>
           </nav>

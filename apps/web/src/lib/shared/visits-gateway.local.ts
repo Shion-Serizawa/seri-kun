@@ -1,7 +1,7 @@
 import type { VisitsGateway } from './visits-gateway';
 import { parseStoredVisits } from './parse-stored-visits';
 
-const DEV_VISITS_STORAGE_KEY = 'seri-kun:total-visits:dev';
+const DEV_VISITS_STORAGE_KEY = 'seri.:total-visits:dev';
 
 interface StorageLike {
   getItem(key: string): string | null;
