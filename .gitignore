@@ -14,3 +14,6 @@ work-docs/codex-skills/
 
 /Shion-Serizawa.github.io
 .astro/
+
+# dependency/build caches
+node_modules/
