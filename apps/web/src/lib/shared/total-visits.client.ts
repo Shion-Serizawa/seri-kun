@@ -2,7 +2,12 @@ import { formatTotal } from './total-visits';
 import { createHttpVisitsGateway, loadTotalVisits, readTotalVisits } from './visits-gateway';
 import { createLocalStorageVisitsGateway, resolveBrowserLocalStorage } from './visits-gateway.local';
 
-let totalVisitsPromise: Promise<number | null> | null = null;
+type TotalVisitsCacheKey = 'increment' | 'read';
+
+const totalVisitsPromises: Record<TotalVisitsCacheKey, Promise<number | null> | null> = {
+  increment: null,
+  read: null,
+};
 const gateway = createHttpVisitsGateway({
   request(input, init) {
     return fetch(input, init);
@@ -38,15 +43,17 @@ async function requestTotalVisits(shouldIncrement: boolean): Promise<number | nu
 }
 
 function getTotalVisitsOnce(shouldIncrement: boolean): Promise<number | null> {
-  if (!totalVisitsPromise) {
-    totalVisitsPromise = requestTotalVisits(shouldIncrement).catch((error: unknown) => {
+  const cacheKey: TotalVisitsCacheKey = shouldIncrement ? 'increment' : 'read';
+  if (!totalVisitsPromises[cacheKey]) {
+    totalVisitsPromises[cacheKey] = requestTotalVisits(shouldIncrement).catch((error: unknown) => {
+      totalVisitsPromises[cacheKey] = null;
       if (import.meta.env.DEV) {
         console.debug('Failed to load total visits', error);
       }
       return null;
     });
   }
-  return totalVisitsPromise;
+  return totalVisitsPromises[cacheKey];
 }
 
 export async function updateTotalVisits(): Promise<void> {
