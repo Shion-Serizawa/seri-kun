@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat /d/Shion/work2/typescript/seri-kun/apps/web/src/pages/blog/[slug].astro)",
+      "Bash(cat /d/Shion/work2/typescript/seri-kun/apps/web/src/pages/blog/[slug].module.css)",
+      "Bash(find \"d:/Shion/work2/typescript/seri-kun/apps/web/src/content/blog\" -name \"*.md\" -exec wc -l {} +)",
+      "Bash(cat d:/Shion/work2/typescript/seri-kun/apps/web/src/pages/blog/[slug].module.css)",
+      "Bash(mise exec -- pnpm exec astro check)"
+    ]
+  }
+}

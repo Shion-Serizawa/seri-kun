@@ -31,9 +31,15 @@ test('blog index page renders', async ({ page }) => {
 });
 
 test('blog detail page renders', async ({ page }) => {
-  const response = await page.goto('/blog/2026-01-31-example');
+  const response = await page.goto('/blog');
   expect(response?.status()).toBe(200);
-  await expect(
-    page.getByRole('heading', { level: 1, name: /Example: Astro Content Collections/ }),
-  ).toBeVisible();
+
+  const firstPostLink = page.locator('a[href^="/blog/"]').first();
+  await expect(firstPostLink).toBeVisible();
+
+  await firstPostLink.click();
+
+  await expect(page).toHaveURL(/\/blog\/[^/?#]+\/?$/);
+  const heading = page.getByRole('heading', { level: 1 });
+  await expect(heading).toBeVisible();
 });

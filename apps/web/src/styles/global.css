@@ -136,7 +136,7 @@ pre {
 .prose {
   max-width: 58rem;
   color: color-mix(in srgb, var(--fg) 90%, transparent);
-  font-size: 1.03rem;
+  font-size: 1.125rem;
 }
 
 .prose > :is(h1, h2, h3) {

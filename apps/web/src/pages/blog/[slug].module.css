@@ -92,6 +92,27 @@
   border-radius: 0.75rem;
 }
 
+.content :global(.mermaid) {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  background: #f9f9f7;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  overflow-x: auto;
+}
+
+.content :global(.mermaid svg) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.content :global(.mermaid .nodeLabel) {
+  white-space: pre-line;
+  font-weight: 500;
+}
+
 @media (max-width: 30rem) {
   .article {
     padding: 1rem;
