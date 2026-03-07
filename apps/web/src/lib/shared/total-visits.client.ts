@@ -1,18 +1,23 @@
 import { formatTotal } from './total-visits';
-import { createHttpVisitsGateway, loadTotalVisits } from './visits-gateway';
+import { createHttpVisitsGateway, loadTotalVisits, readTotalVisits } from './visits-gateway';
 import { createLocalStorageVisitsGateway, resolveBrowserLocalStorage } from './visits-gateway.local';
 
-let totalVisitsPromise: Promise<number | null> | null = null;
+type TotalVisitsCacheKey = 'increment' | 'read';
+
+const totalVisitsPromises: Record<TotalVisitsCacheKey, Promise<number | null> | null> = {
+  increment: null,
+  read: null,
+};
 const gateway = createHttpVisitsGateway({
   request(input, init) {
     return fetch(input, init);
   },
 });
 
-async function requestTotalVisits(): Promise<number | null> {
+async function requestTotalVisits(shouldIncrement: boolean): Promise<number | null> {
   let total: number | null = null;
   try {
-    total = await loadTotalVisits(gateway);
+    total = shouldIncrement ? await loadTotalVisits(gateway) : await readTotalVisits(gateway);
   } catch {
     total = null;
   }
@@ -30,22 +35,25 @@ async function requestTotalVisits(): Promise<number | null> {
   }
 
   try {
-    return await loadTotalVisits(createLocalStorageVisitsGateway(localStorage));
+    const localGateway = createLocalStorageVisitsGateway(localStorage);
+    return shouldIncrement ? await loadTotalVisits(localGateway) : await readTotalVisits(localGateway);
   } catch {
     return null;
   }
 }
 
-function getTotalVisitsOnce(): Promise<number | null> {
-  if (!totalVisitsPromise) {
-    totalVisitsPromise = requestTotalVisits().catch((error: unknown) => {
+function getTotalVisitsOnce(shouldIncrement: boolean): Promise<number | null> {
+  const cacheKey: TotalVisitsCacheKey = shouldIncrement ? 'increment' : 'read';
+  if (!totalVisitsPromises[cacheKey]) {
+    totalVisitsPromises[cacheKey] = requestTotalVisits(shouldIncrement).catch((error: unknown) => {
+      totalVisitsPromises[cacheKey] = null;
       if (import.meta.env.DEV) {
         console.debug('Failed to load total visits', error);
       }
       return null;
     });
   }
-  return totalVisitsPromise;
+  return totalVisitsPromises[cacheKey];
 }
 
 export async function updateTotalVisits(): Promise<void> {
@@ -54,7 +62,8 @@ export async function updateTotalVisits(): Promise<void> {
     return;
   }
 
-  const total = await getTotalVisitsOnce();
+  const shouldIncrement = window.location.pathname === '/';
+  const total = await getTotalVisitsOnce(shouldIncrement);
   if (typeof total !== 'number') {
     return;
   }

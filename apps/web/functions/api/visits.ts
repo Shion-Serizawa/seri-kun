@@ -8,7 +8,7 @@ import {
   type VisitsStore,
 } from './visits-store';
 
-const VISITS_IP_TTL_SECONDS = 60;
+const VISITS_IP_TTL_SECONDS = 30 * 60;
 
 type ErrorResponse = { error: 'server_error' | 'rate_limited' | 'forbidden' };
 
