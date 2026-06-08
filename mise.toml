@@ -1,6 +1,6 @@
 [tools]
-# Astro v5 の要件を満たす安定ライン
-node = "20"
+# Astro の要件を満たす安定ライン
+node = "22.12.0"
 pnpm = "9"
 
 [env]
