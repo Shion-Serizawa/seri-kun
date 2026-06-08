@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat ./apps/web/src/pages/blog/'[slug]'.astro)",
+      "Bash(cat ./apps/web/src/pages/blog/'[slug]'.module.css)",
+      "Bash(find \"./apps/web/src/content/blog\" -name \"*.md\" -exec wc -l {} +)",
+      "Bash(mise exec -- pnpm exec astro check)"
+    ]
+  }
+}
