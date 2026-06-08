@@ -95,7 +95,7 @@
 .content :global(.mermaid) {
   margin: 1.5rem 0;
   padding: 1.25rem 1.5rem;
-  background: #f9f9f7;
+  background: var(--mermaid-bg, #f9f9f7);
   border-radius: 0.9rem;
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   overflow-x: auto;

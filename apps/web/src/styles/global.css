@@ -5,6 +5,7 @@
   --fg: #e8eef6;
   --muted: color-mix(in srgb, var(--fg) 60%, transparent);
   --surface: #0e1420;
+  --mermaid-bg: #111826;
   --border: color-mix(in srgb, var(--fg) 14%, transparent);
   --link: #9cd1ff;
   --accent: #b9ffb5;
@@ -51,6 +52,7 @@
     --fg: #0b1220;
     --muted: color-mix(in srgb, var(--fg) 55%, transparent);
     --surface: #f3f0ea;
+    --mermaid-bg: #f9f9f7;
     --border: color-mix(in srgb, var(--fg) 16%, transparent);
     --link: #0b4db8;
     --accent: #0f7a1a;

@@ -1,19 +1,41 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+/**
+ * @typedef {{ type: string, children?: RemarkNode[] }} RemarkNode
+ * @typedef {RemarkNode & { type: 'root', children: RemarkNode[] }} RemarkRoot
+ * @typedef {RemarkNode & { type: 'code', lang?: string, value: string, meta?: string }} RemarkCode
+ */
+
 function remarkMermaid() {
-  return (/** @type {any} */ tree) => {
-    /** @type {any[]} */
+  /**
+   * @param {RemarkRoot} tree
+   */
+  return (tree) => {
+    /** @type {RemarkCode[]} */
     const toReplace = [];
-    const visit = (/** @type {any} */ node) => {
-      if (node.type === 'code' && node.lang === 'mermaid') {
-        toReplace.push(node);
+    /**
+     * @param {RemarkNode} node
+     */
+    const visit = (node) => {
+      if (node.type === 'code') {
+        const codeNode = /** @type {RemarkCode} */ (node);
+        if (codeNode.lang === 'mermaid') {
+          toReplace.push(codeNode);
+        }
       }
-      node.children?.forEach(visit);
+      if ('children' in node && Array.isArray(node.children)) {
+        /** @type {RemarkNode[]} */
+        const children = node.children;
+        children.forEach(visit);
+      }
     };
     visit(tree);
+    /**
+     * @param {RemarkCode} node
+     */
     toReplace.forEach((node) => {
-      const mermaidSource = node.value.replaceAll('\\n', '<br/>');
+      const mermaidSource = node.value.replaceAll('\n', '<br/>');
       Object.assign(node, {
         type: 'html',
         value: `<div class="mermaid">${mermaidSource}</div>`,
