@@ -20,7 +20,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "5.17.1"
+    "astro": "6.1.10"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.4",
@@ -36,7 +36,7 @@
     "prettier": "3.5.1",
     "prettier-plugin-astro": "0.14.1",
     "typescript": "5.7.3",
-    "vitest": "4.0.18",
+    "vitest": "4.1.0",
     "wrangler": "^4.63.0"
   },
   "pnpm": {
