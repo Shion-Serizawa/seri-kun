@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "astro": "5.17.1",
+    "mdast-util-from-markdown": "2.0.2",
     "mermaid": "^11.12.3"
   },
   "devDependencies": {

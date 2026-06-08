@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { toBlogRouteId } from '../../lib/blog/blog-entry-id';
+import { getBlogOgImage } from '../../lib/blog/blog-og-image';
 import { createFileUpdatedAtLoader, getDefaultBlogUpdatedAtFilePath } from '../../lib/node/updated-at-node';
 import styles from './[slug].module.css';
 
@@ -23,6 +24,8 @@ const { Content } = await entry.render();
 const pageTitle = `${entry.data.title} | Blog | seri.`;
 const description = entry.data.description;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+const siteUrl = Astro.site ? new URL(Astro.site) : new URL(Astro.url.origin);
+const ogImage = getBlogOgImage(entry.body, canonicalUrl, siteUrl);
 const updatedAtLoader = createFileUpdatedAtLoader(getDefaultBlogUpdatedAtFilePath());
 const updatedAtIso = await updatedAtLoader.getBlogUpdatedAtIso(entry.id);
 const updatedAtDate = updatedAtIso ? updatedAtIso.slice(0, 10) : null;
@@ -35,6 +38,11 @@ const shouldShowUpdatedAt = updatedAtDate !== null && updatedAtDate !== entry.da
     <meta property="og:description" content={description} />
     <meta property="og:type" content="article" />
     <meta property="og:url" content={canonicalUrl.toString()} />
+    {ogImage ? <meta property="og:image" content={ogImage.url} /> : null}
+    {ogImage?.alt ? <meta property="og:image:alt" content={ogImage.alt} /> : null}
+    {ogImage ? <meta name="twitter:card" content="summary_large_image" /> : null}
+    {ogImage ? <meta name="twitter:image" content={ogImage.url} /> : null}
+    {ogImage?.alt ? <meta name="twitter:image:alt" content={ogImage.alt} /> : null}
   </Fragment>
 
   <article class={`prose ${styles.article}`}>

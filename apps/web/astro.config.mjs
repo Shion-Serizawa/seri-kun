@@ -49,6 +49,7 @@ function remarkMermaid() {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://seri-blog.pages.dev',
   output: 'static',
   markdown: {
     remarkPlugins: [remarkMermaid],
