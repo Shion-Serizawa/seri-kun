@@ -7,7 +7,23 @@ import { defineConfig } from 'astro/config';
  * @typedef {RemarkNode & { type: 'code', lang?: string, value: string, meta?: string }} RemarkCode
  */
 
-function remarkMermaid() {
+/**
+ * @param {string} value
+ * @returns {string}
+ */
+export function escapeHtmlText(value) {
+  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+}
+
+/**
+ * @param {string} source
+ * @returns {string}
+ */
+export function renderMermaidHtml(source) {
+  return `<div class="mermaid">${escapeHtmlText(source)}</div>`;
+}
+
+export function remarkMermaid() {
   /**
    * @param {RemarkRoot} tree
    */
@@ -35,10 +51,9 @@ function remarkMermaid() {
      * @param {RemarkCode} node
      */
     toReplace.forEach((node) => {
-      const mermaidSource = node.value.replaceAll('\n', '<br/>');
       Object.assign(node, {
         type: 'html',
-        value: `<div class="mermaid">${mermaidSource}</div>`,
+        value: renderMermaidHtml(node.value),
         lang: undefined,
         meta: undefined,
         children: undefined,
