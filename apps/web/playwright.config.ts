@@ -22,7 +22,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run build:e2e && npx wrangler pages dev dist --port ${port} --ip 127.0.0.1`,
+    command: `pnpm build:e2e && pnpm exec wrangler pages dev dist --port ${port} --ip 127.0.0.1`,
     env: {
       ...process.env,
       VISITS_LOCAL_STORE: 'memory',

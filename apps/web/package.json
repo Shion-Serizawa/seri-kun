@@ -2,12 +2,13 @@
   "name": "apps-web",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "pnpm@10.29.3",
   "scripts": {
     "dev": "astro dev",
     "gen:meta": "node scripts/run-ts.mjs scripts/generate-content-metadata.ts",
-    "prebuild": "npm run gen:meta",
+    "prebuild": "pnpm gen:meta",
     "build": "astro build",
-    "build:e2e": "npm run prebuild && astro build",
+    "build:e2e": "pnpm prebuild && astro build",
     "preview": "astro preview",
     "lint": "eslint .",
     "test": "vitest run",
@@ -39,10 +40,5 @@
     "typescript": "5.7.3",
     "vitest": "4.1.0",
     "wrangler": "^4.63.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "lodash": "4.17.23"
-    }
   }
 }

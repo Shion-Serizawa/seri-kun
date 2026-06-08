@@ -1,7 +1,7 @@
 [tools]
 # Astro の要件を満たす安定ライン
-node = "22.12.0"
-pnpm = "9"
+node = "24.16.0"
+pnpm = "10.29.3"
 
 [env]
 # 任意: Cloudflare Web Analytics の token（公開情報。未設定でも動作する想定）
