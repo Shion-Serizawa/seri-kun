@@ -25,7 +25,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm build:e2e && pnpm exec wrangler pages dev dist --port ${port} --ip 127.0.0.1`,
+    command: `pnpm build:e2e && pnpm exec wrangler pages dev dist --compatibility-date=2026-06-08 --port ${port} --ip 127.0.0.1`,
     env: {
       ...process.env,
       VISITS_LOCAL_STORE: 'memory',
