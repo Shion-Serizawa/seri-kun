@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-const { renderMermaidHtml } = (await import('../../../astro.config.mjs')) as {
-  renderMermaidHtml: (source: string) => string;
-};
+import { renderMermaidHtml } from './mermaid-html';
 
 describe('renderMermaidHtml', () => {
   it('keeps Mermaid line breaks as text instead of converting them to HTML breaks', () => {

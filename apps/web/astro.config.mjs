@@ -1,27 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { renderMermaidHtml } from './src/lib/markdown/mermaid-html.ts';
 
 /**
  * @typedef {{ type: string, children?: RemarkNode[] }} RemarkNode
  * @typedef {RemarkNode & { type: 'root', children: RemarkNode[] }} RemarkRoot
  * @typedef {RemarkNode & { type: 'code', lang?: string, value: string, meta?: string }} RemarkCode
  */
-
-/**
- * @param {string} value
- * @returns {string}
- */
-export function escapeHtmlText(value) {
-  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-}
-
-/**
- * @param {string} source
- * @returns {string}
- */
-export function renderMermaidHtml(source) {
-  return `<div class="mermaid">${escapeHtmlText(source)}</div>`;
-}
 
 export function remarkMermaid() {
   /**
