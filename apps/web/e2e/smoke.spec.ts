@@ -56,4 +56,16 @@ test('blog detail page renders OGP image from the first markdown image', async (
     'content',
     '旧サイトのBlog部分',
   );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    'content',
+    'summary_large_image',
+  );
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+    'content',
+    'https://seri-blog.pages.dev/blog/2026-03-01/image.png',
+  );
+  await expect(page.locator('meta[name="twitter:image:alt"]')).toHaveAttribute(
+    'content',
+    '旧サイトのBlog部分',
+  );
 });

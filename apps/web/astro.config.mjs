@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { renderMermaidHtml } from './src/lib/markdown/mermaid-html.ts';
 
 /**
  * @typedef {{ type: string, children?: RemarkNode[] }} RemarkNode
@@ -7,7 +8,7 @@ import { defineConfig } from 'astro/config';
  * @typedef {RemarkNode & { type: 'code', lang?: string, value: string, meta?: string }} RemarkCode
  */
 
-function remarkMermaid() {
+export function remarkMermaid() {
   /**
    * @param {RemarkRoot} tree
    */
@@ -35,10 +36,9 @@ function remarkMermaid() {
      * @param {RemarkCode} node
      */
     toReplace.forEach((node) => {
-      const mermaidSource = node.value.replaceAll('\n', '<br/>');
       Object.assign(node, {
         type: 'html',
-        value: `<div class="mermaid">${mermaidSource}</div>`,
+        value: renderMermaidHtml(node.value),
         lang: undefined,
         meta: undefined,
         children: undefined,
