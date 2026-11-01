@@ -5,8 +5,16 @@
   border-radius: calc(var(--radius) + 0.2rem);
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   background:
-    radial-gradient(1200px 800px at 18% 0%, color-mix(in srgb, var(--link) 10%, transparent), transparent 55%),
-    radial-gradient(900px 700px at 85% 18%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%),
+    radial-gradient(
+      1200px 800px at 18% 0%,
+      color-mix(in srgb, var(--link) 10%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 700px at 85% 18%,
+      color-mix(in srgb, var(--accent) 8%, transparent),
+      transparent 55%
+    ),
     color-mix(in srgb, var(--surface) 82%, transparent);
   box-shadow: var(--shadow);
 }

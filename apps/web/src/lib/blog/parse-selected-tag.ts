@@ -8,4 +8,3 @@ export function parseSelectedTag(
   if (!knownTags.includes(tag)) return null;
   return tag;
 }
-

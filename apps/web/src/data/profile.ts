@@ -24,7 +24,17 @@ export const timelineSnapshot = timeline.slice(2);
 export const skills = {
   strong: ['Java', 'MySQL', 'AI Coding (Claude Code, SDD)'],
   practical: ['Git', 'Docker', 'Python', 'Cloudflare Pages', 'Unix系'],
-  explored: ['C', 'JavaScript', 'TypeScript', 'Deno', 'Node-RED', 'React', 'Next.js', 'Svelte', 'Astro'],
+  explored: [
+    'C',
+    'JavaScript',
+    'TypeScript',
+    'Deno',
+    'Node-RED',
+    'React',
+    'Next.js',
+    'Svelte',
+    'Astro',
+  ],
 } as const;
 
 export const travelPlaces = [
