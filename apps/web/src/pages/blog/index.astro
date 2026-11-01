@@ -32,20 +32,16 @@ const tags = listBlogTags(sorted);
 
   <section class={styles.controls} aria-label="Blog filters">
     <div class={styles.tags} role="list" aria-label="Tags">
-      <a class={styles.tagLink} href="/blog" data-tag-link data-tag="" role="listitem">
-        All
-      </a>
-      {tags.map((tag) => (
-        <a
-          class={styles.tagLink}
-          href={`/blog?tag=${encodeURIComponent(tag)}`}
-          data-tag-link
-          data-tag={tag}
-          role="listitem"
-        >
-          #{tag}
-        </a>
-      ))}
+      <a class={styles.tagLink} href="/blog" data-tag-link data-tag="" role="listitem"> All </a>
+      {tags.map((tag) => <a
+        class={styles.tagLink}
+        href={`/blog?tag=${encodeURIComponent(tag)}`}
+        data-tag-link
+        data-tag={tag}
+        role="listitem"
+      >
+        #{tag}
+      </a>)}
     </div>
     <div class={styles.status} id="blog-status" aria-live="polite"></div>
   </section>
@@ -53,38 +49,32 @@ const tags = listBlogTags(sorted);
   <p class={styles.empty} id="blog-empty" hidden>該当する記事がありません。</p>
 
   <div class={styles.groups} id="blog-groups">
-    {groups.map((group) => (
-      <section class={styles.month} data-month-group data-month={group.month}>
-        <h2 class={styles.monthTitle}>{group.month}</h2>
-        <ul class={styles.list} aria-label={`Posts in ${group.month}`}>
-          {group.posts.map((post) => (
-            <li
-              class={styles.item}
-              data-post
-              data-tags={JSON.stringify(post.tags)}
-              data-published-at={post.publishedAt}
-            >
-              <a class={styles.card} href={`/blog/${post.id}`}>
-                <div class={styles.cardHead}>
-                  <div class={styles.cardTitle}>{post.title}</div>
-                  <time class={styles.cardDate} datetime={post.publishedAt}>
-                    {post.publishedAt}
-                  </time>
-                </div>
-                <p class={styles.cardDesc}>{post.description}</p>
-                {post.tags.length ? (
-                  <div class={styles.cardTags} aria-label="Tags">
-                    {post.tags.map((tag) => (
-                      <span class={styles.tagChip}>#{tag}</span>
-                    ))}
-                  </div>
-                ) : null}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
+    {groups.map((group) => <section class={styles.month} data-month-group data-month={group.month}>
+      <h2 class={styles.monthTitle}>{group.month}</h2>
+      <ul class={styles.list} aria-label={`Posts in ${group.month}`}>
+        {group.posts.map((post) => <li
+          class={styles.item}
+          data-post
+          data-tags={JSON.stringify(post.tags)}
+          data-published-at={post.publishedAt}
+        >
+          <a class={styles.card} href={`/blog/${post.id}`}>
+            <div class={styles.cardHead}>
+              <div class={styles.cardTitle}>{post.title}</div>
+              <time class={styles.cardDate} datetime={post.publishedAt}>
+                {post.publishedAt}
+              </time>
+            </div>
+            <p class={styles.cardDesc}>{post.description}</p>
+            {post.tags.length ? (
+              <div class={styles.cardTags} aria-label="Tags">
+                {post.tags.map((tag) => <span class={styles.tagChip}>#{tag}</span>)}
+              </div>
+            ) : null}
+          </a>
+        </li>)}
+      </ul>
+    </section>)}
   </div>
 
   <script is:inline type="module" src={blogFilterScriptUrl}></script>

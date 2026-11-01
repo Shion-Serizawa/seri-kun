@@ -2,7 +2,10 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { toBlogRouteId } from '../../lib/blog/blog-entry-id';
-import { createFileUpdatedAtLoader, getDefaultBlogUpdatedAtFilePath } from '../../lib/node/updated-at-node';
+import {
+  createFileUpdatedAtLoader,
+  getDefaultBlogUpdatedAtFilePath,
+} from '../../lib/node/updated-at-node';
 import styles from './[slug].module.css';
 
 type Props = {
@@ -58,11 +61,12 @@ const shouldShowUpdatedAt = updatedAtDate !== null && updatedAtDate !== entry.da
       </div>
       {entry.data.tags.length ? (
         <div class={styles.tags} aria-label="Tags">
-          {entry.data.tags.map((tag) => (
-            <a class={styles.tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
-              #{tag}
-            </a>
-          ))}
+          {entry.data.tags.map((tag) => <a
+            class={styles.tag}
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+          >
+            #{tag}
+          </a>)}
         </div>
       ) : null}
     </header>

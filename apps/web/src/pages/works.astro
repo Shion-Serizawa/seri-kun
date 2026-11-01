@@ -12,6 +12,8 @@ import styles from './works.module.css';
   </p>
 
   <section class={styles.grid} aria-label="Works list">
-    {works.map((work) => <WorkCard work={work} />)}
+    {works.map((work) => (
+      <WorkCard work={work} />
+    ))}
   </section>
 </BaseLayout>
