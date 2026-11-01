@@ -15,7 +15,9 @@ function findGitRoot(cwd: string): string {
     return out.trim();
   } catch (error) {
     const originalMessage =
-      error && typeof error === 'object' && 'message' in error ? String(error.message) : String(error);
+      error && typeof error === 'object' && 'message' in error
+        ? String(error.message)
+        : String(error);
     throw new Error(
       `[findGitRoot] cwd is not inside a git repository: cwd="${cwd}" (original error: ${originalMessage})`,
     );

@@ -1,0 +1,36 @@
+name: Setup web toolchain
+description: Socket Firewall（版固定 + sha256 検証）と Vite+ をセットアップし、apps/web の依存を frozen install する
+
+runs:
+  using: composite
+  steps:
+    # Socket Firewall Free を版固定 + sha256 検証で取得する。
+    # setup-vp は PATH 上の sfw を優先して使うため、内蔵ダウンロード（ハッシュ未検証）を通らない。
+    # 版は setup-vp が動作確認している版（setup-vp の src/ci/install-sfw.ts の SFW_VERSION）に揃える。
+    - name: Install Socket Firewall (pinned)
+      shell: bash
+      working-directory: ${{ runner.temp }}
+      env:
+        SFW_VERSION: v1.15.4
+        SFW_SHA256: cf9f55b8343e1ef6e6dcccdb09b99c70c0430a22ed7d0079286eccddeaf72670
+      run: |
+        mkdir -p sfw-bin
+        curl -fsSL --proto '=https' -o sfw-bin/sfw "https://github.com/SocketDev/sfw-free/releases/download/${SFW_VERSION}/sfw-free-linux-x86_64"
+        echo "${SFW_SHA256}  sfw-bin/sfw" | sha256sum --check --strict
+        chmod +x sfw-bin/sfw
+        echo "${RUNNER_TEMP}/sfw-bin" >> "$GITHUB_PATH"
+
+    # Vite+ 本体のバージョンは apps/web/package.json の vite-plus（完全固定）から解決される。
+    # pnpm は packageManager フィールドのバージョンが使われる。
+    - name: Setup Vite+ and install dependencies
+      uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
+      with:
+        working-directory: apps/web
+        node-version: 24.22.1
+        cache: true
+        cache-dependency-path: pnpm-lock.yaml
+        # Socket Firewall で既知の悪性パッケージの取得をブロックする
+        sfw: true
+        run-install: |
+          - cwd: .
+            args: ['--frozen-lockfile']

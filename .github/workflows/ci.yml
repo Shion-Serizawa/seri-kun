@@ -7,7 +7,10 @@ on:
     paths:
       - "apps/web/**"
       - "mise.toml"
+      - "mise.lock"
+      - "pnpm-workspace.yaml"
       - ".github/workflows/**"
+      - ".github/actions/**"
   push:
     branches:
       - main
@@ -15,7 +18,10 @@ on:
     paths:
       - "apps/web/**"
       - "mise.toml"
+      - "mise.lock"
+      - "pnpm-workspace.yaml"
       - ".github/workflows/**"
+      - ".github/actions/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,45 +41,36 @@ jobs:
         working-directory: apps/web
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
-        with:
-          version: 10.29.3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 24.16.0
-          cache: pnpm
-          cache-dependency-path: apps/web/pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # sfw（版固定 + sha256 検証）と Vite+ のセットアップ、frozen install（両ジョブ共通）
+      - name: Setup web toolchain
+        uses: ./.github/actions/setup-web
 
       - name: Install Playwright system dependencies
-        run: pnpm exec playwright install-deps chromium
+        run: vp exec playwright install-deps chromium
 
       - name: Generate content metadata
-        run: pnpm gen:meta
+        run: vp run gen:meta
 
-      - name: Lint
-        run: pnpm lint
+      # package.json の check（astro sync → vp check）をそのまま使い、ローカルと手順を揃える
+      - name: Format / Lint / Type-aware check
+        run: vp run check
 
-      - name: Typecheck
-        run: pnpm typecheck
+      - name: Typecheck (Astro)
+        run: vp run typecheck
 
       - name: Unit tests
-        run: pnpm test
+        run: vp test run
 
       - name: E2E tests
-        run: pnpm test:e2e
+        run: vp run test:e2e
 
       - name: Build
-        run: pnpm build
+        run: vp run build
 
   deploy:
     name: Deploy to Cloudflare Pages
@@ -91,41 +88,32 @@ jobs:
         working-directory: apps/web
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
-        with:
-          version: 10.29.3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 24.16.0
-          cache: pnpm
-          cache-dependency-path: apps/web/pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # sfw（版固定 + sha256 検証）と Vite+ のセットアップ、frozen install（両ジョブ共通）
+      - name: Setup web toolchain
+        uses: ./.github/actions/setup-web
 
       - name: Verify metadata reproducibility
         run: |
-          pnpm gen:meta
+          vp run gen:meta
           git diff --exit-code
 
       - name: Build
-        run: pnpm build
+        run: vp run build
 
       - name: Deploy
         id: deploy
-        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: "4.63.0"
+          # devDependencies と同じ版にして、Action 側での追加インストールを避ける
+          wranglerVersion: "4.152.0"
           workingDirectory: apps/web
           packageManager: pnpm
           command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }} --branch=main

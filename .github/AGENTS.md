@@ -8,19 +8,27 @@
 - モノレポ前提で、初期は **`apps/web` の変更にだけ反応**する（`paths` フィルタ）。
 - Git 由来の生成（`updatedAt`）があるため、checkout は **`fetch-depth: 0`** を基本とする。
 
-## 1. Node / pnpm / キャッシュ
+## 1. Node / pnpm / Vite+ / キャッシュ
 
 - Node は `mise.toml` を正として揃えるのが基本。
+- セットアップは `voidzero-dev/setup-vp` に一本化する（Vite+ 本体は `apps/web/package.json` の `vite-plus`、pnpm は `packageManager` から解決される）。
 - Actions 上で `mise` を使わない場合でも、Node バージョンは固定する（CI と本番で差が出やすい）。
-- pnpm は cache を有効化し、モノレポの場合は `apps/web/pnpm-lock.yaml` 等を `cache-dependency-path` に含める。
+- cache を有効化し、`cache-dependency-path` に `apps/web/pnpm-lock.yaml` を指定する。
+- サプライチェーン対策:
+  - Action はコミット SHA で固定し、`# vX.Y.Z` コメントを残す（Dependabot が追従できる）。
+  - `actions/checkout` は `persist-credentials: false`。
+  - install は `setup-vp` の `sfw: true`（Socket Firewall）経由で `--frozen-lockfile` 実行する。
+  - セットアップは composite action `.github/actions/setup-web` に集約する（ジョブ間で版がずれないように）。
+  - sfw 本体は版固定 + sha256 検証して PATH に置く（setup-vp 内蔵の取得はハッシュ未検証のため）。
+    版を上げるときは setup-vp が動作確認している版（`src/ci/install-sfw.ts` の `SFW_VERSION`）に合わせ、リリースの digest を転記する。
 
 ## 2. 推奨ジョブ構成（CI）
 
 `apps/web` を `working-directory` にして、以下を順に実行する:
 
-1) install（`pnpm install --frozen-lockfile`）
-2) generate（`pnpm gen:meta`）
-3) lint / typecheck
+1) install（`setup-vp` が `vp install --frozen-lockfile` を実行）
+2) generate（`vp run gen:meta`）
+3) `vp run check`（astro sync → format / lint / type-aware）/ typecheck（`astro check`）
 4) test（+ 任意で Functions テスト）
 4.5) e2e（Playwright）
 5) build

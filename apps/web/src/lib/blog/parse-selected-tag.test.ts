@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import { parseSelectedTag } from './parse-selected-tag';
 
@@ -16,4 +16,3 @@ describe('parseSelectedTag', () => {
     expect(parseSelectedTag('?tag=a', ['a', 'b'])).toBe('a');
   });
 });
-

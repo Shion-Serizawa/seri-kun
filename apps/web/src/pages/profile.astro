@@ -1,6 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { hobbyHighlights, mainPc, skills, socialLinks, timeline, travelPlaces } from '../data/profile';
+import {
+  hobbyHighlights,
+  mainPc,
+  skills,
+  socialLinks,
+  timeline,
+  travelPlaces,
+} from '../data/profile';
 import styles from './profile.module.css';
 ---
 
@@ -8,13 +15,20 @@ import styles from './profile.module.css';
   <section class={styles.hero}>
     <p class={styles.kicker}>About</p>
     <h1>Profile</h1>
-    <p class={styles.lead}>基礎をしっかり学び、保守性・可読性の高いコード。趣味と内向きツールは気軽に。</p>
+    <p class={styles.lead}>
+      基礎をしっかり学び、保守性・可読性の高いコード。趣味と内向きツールは気軽に。
+    </p>
 
     <nav class={styles.socialLinks} aria-label="Profile social links">
       <a class={styles.socialLink} href={socialLinks.x} target="_blank" rel="noopener noreferrer">
         X (Twitter)
       </a>
-      <a class={styles.socialLink} href={socialLinks.github} target="_blank" rel="noopener noreferrer">
+      <a
+        class={styles.socialLink}
+        href={socialLinks.github}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         GitHub
       </a>
     </nav>
@@ -24,12 +38,10 @@ import styles from './profile.module.css';
     <article class={styles.card}>
       <h2>経歴</h2>
       <ol class={styles.timeline}>
-        {timeline.map((item) => (
-          <li>
-            <span class={styles.age}>{item.age}</span>
-            <span>{item.event}</span>
-          </li>
-        ))}
+        {timeline.map((item) => <li>
+          <span class={styles.age}>{item.age}</span>
+          <span>{item.event}</span>
+        </li>)}
       </ol>
     </article>
 
@@ -64,12 +76,10 @@ import styles from './profile.module.css';
         </section>
 
         <div class={styles.hobbyPanels}>
-          {hobbyHighlights.map((item) => (
-            <section class={styles.hobbyPanel}>
-              <h3>{item.title}</h3>
-              <p>{item.detail}</p>
-            </section>
-          ))}
+          {hobbyHighlights.map((item) => <section class={styles.hobbyPanel}>
+            <h3>{item.title}</h3>
+            <p>{item.detail}</p>
+          </section>)}
         </div>
       </div>
     </article>

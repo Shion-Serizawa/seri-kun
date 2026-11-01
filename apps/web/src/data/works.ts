@@ -15,7 +15,8 @@ export type Work = {
 export const works = [
   {
     title: 'MySQL Schema MCP Server',
-    description: '指定したホストからスキーマ情報、テーブル情報、インデックス情報などを取得するMCPサーバー。',
+    description:
+      '指定したホストからスキーマ情報、テーブル情報、インデックス情報などを取得するMCPサーバー。',
     tech: ['TypeScript', 'MCP', 'MySQL'],
     links: {
       github: 'https://github.com/Shion-Serizawa/mcp-first',
@@ -48,7 +49,8 @@ export const works = [
   },
   {
     title: 'HelperxHelper',
-    description: '高専プロコン向けに制作したホームヘルパー支援システム。インタビューも含めて設計・開発。',
+    description:
+      '高専プロコン向けに制作したホームヘルパー支援システム。インタビューも含めて設計・開発。',
     tech: ['Web', 'Interview', 'System Design'],
     image: {
       src: '/works/helper.png',

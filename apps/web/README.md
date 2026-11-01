@@ -42,10 +42,14 @@ mise exec -- pnpm -C apps/web build
 mise exec -- pnpm -C apps/web preview
 ```
 
-### Lint / Format
+### Check / Lint / Format（Vite+）
 
 ```sh
-mise exec -- pnpm -C apps/web lint
-mise exec -- pnpm -C apps/web format
+mise exec -- pnpm -C apps/web check         # vp check（format + lint + type-aware）
+mise exec -- pnpm -C apps/web lint          # vp lint（Oxlint）
+mise exec -- pnpm -C apps/web format        # vp fmt（Oxfmt）
 mise exec -- pnpm -C apps/web format:check
 ```
+
+設定は `vite.config.ts` の `lint` / `fmt` / `test` ブロックにまとめています。
+`.astro` は Oxfmt 同梱の prettier-plugin-astro で整形します（`@astrojs/compiler-rs` が必要）。lint（Oxlint）は frontmatter / `<script>` 部分のみが対象です。

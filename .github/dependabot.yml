@@ -6,6 +6,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+    # サプライチェーン対策: 公開直後のバージョンは提案しない（pnpm の minimumReleaseAge と揃える）
+    cooldown:
+      default-days: 7
+    versioning-strategy: increase
     groups:
       production-dependencies:
         dependency-type: "production"
@@ -13,7 +17,12 @@ updates:
         dependency-type: "development"
 
   - package-ecosystem: "github-actions"
-    directory: "/"
+    # composite action（.github/actions/*）内の uses: も更新対象にする
+    directories:
+      - "/"
+      - "/.github/actions/*"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7

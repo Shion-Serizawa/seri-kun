@@ -10,10 +10,10 @@
 ## 1. 技術スタック（前提）
 
 - Frontend: Astro（SSG）, TypeScript（strict）
-- Runtime / Toolchain: Node（`mise.toml` で固定）, pnpm
+- Runtime / Toolchain: Node / pnpm（`mise.toml` で固定）, Vite+（`vp`。`apps/web` の devDependencies で固定）
 - Edge API: Cloudflare Pages Functions + Cloudflare KV
 - CI: GitHub Actions
-- Testing: ESLint / Typecheck / Vitest / Playwright（E2E）
+- Testing: `vp check`（Oxfmt / Oxlint / tsgolint）/ `astro check` / `vp test`（Vitest）/ Playwright（E2E）
 
 ## 2. ディレクトリ（現状と将来）
 
@@ -46,7 +46,14 @@ docs/                  確定ドキュメント（必要になったら）
   - 例外的に型を緩める場合は「境界（IO/外部）」に寄せ、内部は型安全を維持する。
 - 依存関係:
   - “latest” 追従はしない。`package.json` / lockfile で固定し、アップグレードは意図的に行う。
-  - Astro は v6 が beta / docs が分岐しているため、参照先（v5/v6）を常に確認する。
+  - Astro は v7 を使用する。旧版（v6 以前）の docs / 記事を参照していないか常に確認する。
+- サプライチェーン対策（`pnpm-workspace.yaml` / CI で強制）:
+  - バージョンは `^` / `~` なしの完全固定。lockfile は `--frozen-lockfile` で検証する。
+  - 公開から 7 日未満のバージョンは入れない（`minimumReleaseAge`）。
+  - install script は `allowBuilds` に明示したものだけ許可する。追加は理由を添えてレビューする。
+  - GitHub Actions はタグではなくコミット SHA で固定する。
+  - npm 依存は git / URL 指定にしない（registry の integrity 検証と上記ポリシーが効かなくなるため）。
+  - mise のツールは `mise.lock`（URL + チェックサム）で固定する。`mise.toml` の版を変えたら `mise lock --platform linux-x64,macos-arm64,windows-x64` を実行してコミットする。
 - ロジック分離:
   - UI（Astro/HTML/CSS）とドメインロジック（並び替え・グルーピング等）を分離し、後者は `*.ts` に寄せてユニットテスト可能にする。
 - エラー/ログ:
@@ -70,7 +77,9 @@ docs/                  確定ドキュメント（必要になったら）
   - `work-docs/05-implementation-plan.md`
 - Astro（公式）:
   - https://docs.astro.build/
-  - v6 beta / upgrade の分岐に注意: https://v6.docs.astro.build/
+  - v7 アップグレードガイド: https://docs.astro.build/en/guides/upgrade-to/v7/
+- Vite+（公式）:
+  - https://viteplus.dev/
 - Cloudflare（公式）:
   - Pages: https://developers.cloudflare.com/pages/
   - Pages Functions: https://developers.cloudflare.com/pages/functions/

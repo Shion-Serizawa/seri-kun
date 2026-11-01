@@ -50,27 +50,21 @@ import './index.css';
     <article class="homePanel">
       <h2>Doing</h2>
       <ul class="homeDoingList">
-        {doingNow.map((item, index) => (
-          <li style={`--stagger:${index};`}>
-            <span>{item}</span>
-          </li>
-        ))}
+        {doingNow.map((item, index) => <li style={`--stagger:${index};`}>
+          <span>{item}</span>
+        </li>)}
       </ul>
     </article>
 
     <article class="homePanel homePanelTimeline">
       <h2>Profile Snapshot</h2>
       <ol>
-        {timelineSnapshot.map((item) => (
-          <li>
-            <span class="homeWhen">{item.age}</span>
-            <span>{item.event}</span>
-          </li>
-        ))}
+        {timelineSnapshot.map((item) => <li>
+          <span class="homeWhen">{item.age}</span>
+          <span>{item.event}</span>
+        </li>)}
       </ol>
-      <a class="homeTextLink" href="/profile">
-        詳細プロフィールを見る
-      </a>
+      <a class="homeTextLink" href="/profile"> 詳細プロフィールを見る </a>
     </article>
 
     <article class="homePanel homePanelSkills">

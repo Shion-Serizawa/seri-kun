@@ -1,4 +1,5 @@
 // @ts-check
+import { unified } from '@astrojs/markdown-remark';
 import { defineConfig } from 'astro/config';
 import { renderMermaidHtml } from './src/lib/markdown/mermaid-html.ts';
 
@@ -50,7 +51,10 @@ export function remarkMermaid() {
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
+  // Astro 7 で compressHTML の既定が 'jsx' に変わったため、従来の出力を維持する
+  compressHTML: true,
   markdown: {
-    remarkPlugins: [remarkMermaid],
+    // Astro 7 の既定（Sätteri）ではなく remark/rehype パイプラインで remarkMermaid を動かす
+    processor: unified({ remarkPlugins: [remarkMermaid] }),
   },
 });

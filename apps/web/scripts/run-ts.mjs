@@ -49,6 +49,8 @@ execFileSync(
   [
     tscPath,
     absScriptPath,
+    // TS 6+: CLI でファイルを指定するときは tsconfig を読まないことを明示する（TS5112）
+    '--ignoreConfig',
     '--target',
     'ES2022',
     '--module',
@@ -78,7 +80,9 @@ try {
   }
 } catch (error) {
   const message =
-    error && typeof error === 'object' && 'message' in error ? String(error.message) : String(error);
+    error && typeof error === 'object' && 'message' in error
+      ? String(error.message)
+      : String(error);
   const stack = error && typeof error === 'object' && 'stack' in error ? String(error.stack) : '';
 
   console.error(`[run-ts] Failed to run: ${outUrl}`);

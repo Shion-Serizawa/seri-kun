@@ -1,6 +1,9 @@
 import { formatTotal } from './total-visits';
 import { createHttpVisitsGateway, loadTotalVisits, readTotalVisits } from './visits-gateway';
-import { createLocalStorageVisitsGateway, resolveBrowserLocalStorage } from './visits-gateway.local';
+import {
+  createLocalStorageVisitsGateway,
+  resolveBrowserLocalStorage,
+} from './visits-gateway.local';
 
 type TotalVisitsCacheKey = 'increment' | 'read';
 
@@ -36,7 +39,9 @@ async function requestTotalVisits(shouldIncrement: boolean): Promise<number | nu
 
   try {
     const localGateway = createLocalStorageVisitsGateway(localStorage);
-    return shouldIncrement ? await loadTotalVisits(localGateway) : await readTotalVisits(localGateway);
+    return shouldIncrement
+      ? await loadTotalVisits(localGateway)
+      : await readTotalVisits(localGateway);
   } catch {
     return null;
   }
