@@ -21,6 +21,9 @@ export default defineConfig({
     singleQuote: true,
     semi: true,
     trailingComma: 'all',
+    // .astro は Oxfmt 同梱の prettier-plugin-astro で整形する（@astrojs/compiler-rs が必要）。
+    // compressHTML は astro.config.mjs の compressHTML: true と揃える。
+    astro: { compressHTML: 'html' },
   },
   lint: {
     ignorePatterns,

@@ -52,4 +52,4 @@ mise exec -- pnpm -C apps/web format:check
 ```
 
 設定は `vite.config.ts` の `lint` / `fmt` / `test` ブロックにまとめています。
-`.astro` は Oxfmt の整形対象外です（lint は script 部分のみ）。
+`.astro` は Oxfmt 同梱の prettier-plugin-astro で整形します（`@astrojs/compiler-rs` が必要）。lint（Oxlint）は frontmatter / `<script>` 部分のみが対象です。
