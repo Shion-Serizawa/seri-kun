@@ -14,3 +14,11 @@ ASTRO_TELEMETRY_DISABLED = { value = "1", redact = false }
 # 注:
 # - `mise` は安全のため、この `mise.toml` を最初は untrusted 扱いにすることがある
 # - 初回だけ `mise trust`（または `mise trust --yes`）が必要になる場合がある
+
+# サプライチェーン対策: ツールのダウンロード URL / チェックサムを mise.lock に記録し、
+# lockfile にない版の解決を禁止する（バージョン更新時は `mise lock` を再実行してコミットする）
+[settings]
+lockfile = true
+
+[tool_config]
+locked = true
