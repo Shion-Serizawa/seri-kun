@@ -6,6 +6,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+    # サプライチェーン対策: 公開直後のバージョンは提案しない（pnpm の minimumReleaseAge と揃える）
+    cooldown:
+      default-days: 7
+    versioning-strategy: increase
     groups:
       production-dependencies:
         dependency-type: "production"
@@ -17,3 +21,5 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
