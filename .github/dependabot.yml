@@ -17,7 +17,10 @@ updates:
         dependency-type: "development"
 
   - package-ecosystem: "github-actions"
-    directory: "/"
+    # composite action（.github/actions/*）内の uses: も更新対象にする
+    directories:
+      - "/"
+      - "/.github/actions/*"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3

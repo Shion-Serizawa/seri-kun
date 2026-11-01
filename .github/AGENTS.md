@@ -18,7 +18,8 @@
   - Action はコミット SHA で固定し、`# vX.Y.Z` コメントを残す（Dependabot が追従できる）。
   - `actions/checkout` は `persist-credentials: false`。
   - install は `setup-vp` の `sfw: true`（Socket Firewall）経由で `--frozen-lockfile` 実行する。
-  - sfw 本体は前段のステップで版固定 + sha256 検証して PATH に置く（setup-vp 内蔵の取得はハッシュ未検証のため）。
+  - セットアップは composite action `.github/actions/setup-web` に集約する（ジョブ間で版がずれないように）。
+  - sfw 本体は版固定 + sha256 検証して PATH に置く（setup-vp 内蔵の取得はハッシュ未検証のため）。
     版を上げるときは setup-vp が動作確認している版（`src/ci/install-sfw.ts` の `SFW_VERSION`）に合わせ、リリースの digest を転記する。
 
 ## 2. 推奨ジョブ構成（CI）
@@ -27,7 +28,7 @@
 
 1) install（`setup-vp` が `vp install --frozen-lockfile` を実行）
 2) generate（`vp run gen:meta`）
-3) `vp check`（format / lint / type-aware）/ typecheck（`astro check`）
+3) `vp run check`（astro sync → format / lint / type-aware）/ typecheck（`astro check`）
 4) test（+ 任意で Functions テスト）
 4.5) e2e（Playwright）
 5) build

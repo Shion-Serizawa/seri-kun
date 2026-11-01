@@ -10,6 +10,7 @@ on:
       - "mise.lock"
       - "pnpm-workspace.yaml"
       - ".github/workflows/**"
+      - ".github/actions/**"
   push:
     branches:
       - main
@@ -20,6 +21,7 @@ on:
       - "mise.lock"
       - "pnpm-workspace.yaml"
       - ".github/workflows/**"
+      - ".github/actions/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,35 +46,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # Socket Firewall Free を版固定 + sha256 検証で取得する。
-      # setup-vp は PATH 上の sfw を優先して使うため、内蔵ダウンロード（ハッシュ未検証）を通らない。
-      # 版は setup-vp v1.22.0 が動作確認している v1.15.4 に揃える。
-      - name: Install Socket Firewall (pinned)
-        working-directory: ${{ runner.temp }}
-        env:
-          SFW_VERSION: v1.15.4
-          SFW_SHA256: cf9f55b8343e1ef6e6dcccdb09b99c70c0430a22ed7d0079286eccddeaf72670
-        run: |
-          mkdir -p sfw-bin
-          curl -fsSL --proto '=https' -o sfw-bin/sfw "https://github.com/SocketDev/sfw-free/releases/download/${SFW_VERSION}/sfw-free-linux-x86_64"
-          echo "${SFW_SHA256}  sfw-bin/sfw" | sha256sum --check --strict
-          chmod +x sfw-bin/sfw
-          echo "${RUNNER_TEMP}/sfw-bin" >> "$GITHUB_PATH"
-
-      # Vite+ 本体のバージョンは apps/web/package.json の vite-plus（完全固定）から解決される。
-      # pnpm は packageManager フィールドのバージョンが使われる。
-      - name: Setup Vite+ and install dependencies
-        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
-        with:
-          working-directory: apps/web
-          node-version: 24.22.1
-          cache: true
-          cache-dependency-path: pnpm-lock.yaml
-          # Socket Firewall で既知の悪性パッケージの取得をブロックする
-          sfw: true
-          run-install: |
-            - cwd: .
-              args: ['--frozen-lockfile']
+      # sfw（版固定 + sha256 検証）と Vite+ のセットアップ、frozen install（両ジョブ共通）
+      - name: Setup web toolchain
+        uses: ./.github/actions/setup-web
 
       - name: Install Playwright system dependencies
         run: vp exec playwright install-deps chromium
@@ -80,12 +56,9 @@ jobs:
       - name: Generate content metadata
         run: vp run gen:meta
 
-      # vp check の型チェックは astro:content 等の型（.astro/types.d.ts）を参照するため先に生成する
-      - name: Generate Astro types
-        run: vp run sync
-
+      # package.json の check（astro sync → vp check）をそのまま使い、ローカルと手順を揃える
       - name: Format / Lint / Type-aware check
-        run: vp check
+        run: vp run check
 
       - name: Typecheck (Astro)
         run: vp run typecheck
@@ -120,35 +93,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # Socket Firewall Free を版固定 + sha256 検証で取得する。
-      # setup-vp は PATH 上の sfw を優先して使うため、内蔵ダウンロード（ハッシュ未検証）を通らない。
-      # 版は setup-vp v1.22.0 が動作確認している v1.15.4 に揃える。
-      - name: Install Socket Firewall (pinned)
-        working-directory: ${{ runner.temp }}
-        env:
-          SFW_VERSION: v1.15.4
-          SFW_SHA256: cf9f55b8343e1ef6e6dcccdb09b99c70c0430a22ed7d0079286eccddeaf72670
-        run: |
-          mkdir -p sfw-bin
-          curl -fsSL --proto '=https' -o sfw-bin/sfw "https://github.com/SocketDev/sfw-free/releases/download/${SFW_VERSION}/sfw-free-linux-x86_64"
-          echo "${SFW_SHA256}  sfw-bin/sfw" | sha256sum --check --strict
-          chmod +x sfw-bin/sfw
-          echo "${RUNNER_TEMP}/sfw-bin" >> "$GITHUB_PATH"
-
-      # Vite+ 本体のバージョンは apps/web/package.json の vite-plus（完全固定）から解決される。
-      # pnpm は packageManager フィールドのバージョンが使われる。
-      - name: Setup Vite+ and install dependencies
-        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
-        with:
-          working-directory: apps/web
-          node-version: 24.22.1
-          cache: true
-          cache-dependency-path: pnpm-lock.yaml
-          # Socket Firewall で既知の悪性パッケージの取得をブロックする
-          sfw: true
-          run-install: |
-            - cwd: .
-              args: ['--frozen-lockfile']
+      # sfw（版固定 + sha256 検証）と Vite+ のセットアップ、frozen install（両ジョブ共通）
+      - name: Setup web toolchain
+        uses: ./.github/actions/setup-web
 
       - name: Verify metadata reproducibility
         run: |
