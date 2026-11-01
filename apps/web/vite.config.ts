@@ -14,9 +14,13 @@ const ignorePatterns = [
   'pnpm-lock.yaml',
 ];
 
+// ブログ本文は整形しない。updatedAt は記事ファイルの最終コミットから決まるため、
+// ツール都合の整形コミットで「更新日」が変わってしまう。
+const fmtIgnorePatterns = [...ignorePatterns, 'src/content/**'];
+
 export default defineConfig({
   fmt: {
-    ignorePatterns,
+    ignorePatterns: fmtIgnorePatterns,
     printWidth: 100,
     singleQuote: true,
     semi: true,
