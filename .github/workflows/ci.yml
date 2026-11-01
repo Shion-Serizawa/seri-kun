@@ -80,6 +80,10 @@ jobs:
       - name: Generate content metadata
         run: vp run gen:meta
 
+      # vp check の型チェックは astro:content 等の型（.astro/types.d.ts）を参照するため先に生成する
+      - name: Generate Astro types
+        run: vp run sync
+
       - name: Format / Lint / Type-aware check
         run: vp check
 
