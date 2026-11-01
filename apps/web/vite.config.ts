@@ -1,0 +1,48 @@
+// Vite+（vp）用の設定。Astro 本体のビルド設定は astro.config.mjs 側に置く。
+// ここは lint（Oxlint）/ fmt（Oxfmt）/ test（Vitest）だけを担当する。
+import { defineConfig } from 'vite-plus';
+
+const ignorePatterns = [
+  'dist/**',
+  'node_modules/**',
+  '.astro/**',
+  '.tmp/**',
+  '.wrangler/**',
+  'src/generated/**',
+  'test-results/**',
+  'playwright-report/**',
+  'pnpm-lock.yaml',
+];
+
+export default defineConfig({
+  fmt: {
+    ignorePatterns,
+    printWidth: 100,
+    singleQuote: true,
+    semi: true,
+    trailingComma: 'all',
+  },
+  lint: {
+    ignorePatterns,
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
+    overrides: [
+      {
+        // Node 側の生成スクリプトは最小限の shim を triple-slash で参照する
+        files: ['scripts/**/*.ts'],
+        rules: { 'typescript/triple-slash-reference': 'off' },
+      },
+      {
+        // vi.fn() のモックを expect に渡すのは意図どおり
+        files: ['**/*.test.ts'],
+        rules: { 'typescript/unbound-method': 'off' },
+      },
+    ],
+  },
+  test: {
+    environment: 'node',
+    include: ['src/**/*.test.ts', 'functions/**/*.test.ts'],
+  },
+});

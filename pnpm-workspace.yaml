@@ -2,8 +2,19 @@ packages:
   - apps/web
 
 sharedWorkspaceLockfile: false
-minimumReleaseAge: 10080
-trustPolicy: no-downgrade
 
-overrides:
-  lodash: 4.17.23
+# --- サプライチェーン攻撃対策 ---
+# 公開から 7 日未満のバージョンは解決しない（侵害版は数時間〜数日で取り下げられることが多い）
+minimumReleaseAge: 10080
+# 以前より弱い信頼レベル（provenance 等）で公開されたバージョンへの更新を拒否する
+trustPolicy: no-downgrade
+# 推移的依存が git / tarball URL など registry 外を指すことを禁止する
+blockExoticSubdeps: true
+# install script（postinstall 等）は allowBuilds に明示したパッケージのみ実行する
+strictDepBuilds: true
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
+# `pnpm add` で ^ を付けず完全固定する
+saveExact: true

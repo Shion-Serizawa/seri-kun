@@ -1,7 +1,7 @@
 [tools]
-# Astro の要件を満たす安定ライン
-node = "24.16.0"
-pnpm = "10.29.3"
+# Astro 7 / Vite+ の要件（node ^22.23.4 || ^24.11.0）を満たす安定ライン
+node = "24.22.1"
+pnpm = "12.15.0"
 
 [env]
 # 任意: Cloudflare Web Analytics の token（公開情報。未設定でも動作する想定）
