@@ -7,6 +7,7 @@ on:
     paths:
       - "apps/web/**"
       - "mise.toml"
+      - "mise.lock"
       - "pnpm-workspace.yaml"
       - ".github/workflows/**"
   push:
@@ -16,6 +17,7 @@ on:
     paths:
       - "apps/web/**"
       - "mise.toml"
+      - "mise.lock"
       - "pnpm-workspace.yaml"
       - ".github/workflows/**"
 
@@ -41,6 +43,21 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      # Socket Firewall Free を版固定 + sha256 検証で取得する。
+      # setup-vp は PATH 上の sfw を優先して使うため、内蔵ダウンロード（ハッシュ未検証）を通らない。
+      # 版は setup-vp v1.22.0 が動作確認している v1.15.4 に揃える。
+      - name: Install Socket Firewall (pinned)
+        working-directory: ${{ runner.temp }}
+        env:
+          SFW_VERSION: v1.15.4
+          SFW_SHA256: cf9f55b8343e1ef6e6dcccdb09b99c70c0430a22ed7d0079286eccddeaf72670
+        run: |
+          mkdir -p sfw-bin
+          curl -fsSL --proto '=https' -o sfw-bin/sfw "https://github.com/SocketDev/sfw-free/releases/download/${SFW_VERSION}/sfw-free-linux-x86_64"
+          echo "${SFW_SHA256}  sfw-bin/sfw" | sha256sum --check --strict
+          chmod +x sfw-bin/sfw
+          echo "${RUNNER_TEMP}/sfw-bin" >> "$GITHUB_PATH"
 
       # Vite+ 本体のバージョンは apps/web/package.json の vite-plus（完全固定）から解決される。
       # pnpm は packageManager フィールドのバージョンが使われる。
@@ -98,6 +115,21 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      # Socket Firewall Free を版固定 + sha256 検証で取得する。
+      # setup-vp は PATH 上の sfw を優先して使うため、内蔵ダウンロード（ハッシュ未検証）を通らない。
+      # 版は setup-vp v1.22.0 が動作確認している v1.15.4 に揃える。
+      - name: Install Socket Firewall (pinned)
+        working-directory: ${{ runner.temp }}
+        env:
+          SFW_VERSION: v1.15.4
+          SFW_SHA256: cf9f55b8343e1ef6e6dcccdb09b99c70c0430a22ed7d0079286eccddeaf72670
+        run: |
+          mkdir -p sfw-bin
+          curl -fsSL --proto '=https' -o sfw-bin/sfw "https://github.com/SocketDev/sfw-free/releases/download/${SFW_VERSION}/sfw-free-linux-x86_64"
+          echo "${SFW_SHA256}  sfw-bin/sfw" | sha256sum --check --strict
+          chmod +x sfw-bin/sfw
+          echo "${RUNNER_TEMP}/sfw-bin" >> "$GITHUB_PATH"
 
       # Vite+ 本体のバージョンは apps/web/package.json の vite-plus（完全固定）から解決される。
       # pnpm は packageManager フィールドのバージョンが使われる。

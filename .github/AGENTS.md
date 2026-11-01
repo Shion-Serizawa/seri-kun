@@ -18,6 +18,8 @@
   - Action はコミット SHA で固定し、`# vX.Y.Z` コメントを残す（Dependabot が追従できる）。
   - `actions/checkout` は `persist-credentials: false`。
   - install は `setup-vp` の `sfw: true`（Socket Firewall）経由で `--frozen-lockfile` 実行する。
+  - sfw 本体は前段のステップで版固定 + sha256 検証して PATH に置く（setup-vp 内蔵の取得はハッシュ未検証のため）。
+    版を上げるときは setup-vp が動作確認している版（`src/ci/install-sfw.ts` の `SFW_VERSION`）に合わせ、リリースの digest を転記する。
 
 ## 2. 推奨ジョブ構成（CI）
 

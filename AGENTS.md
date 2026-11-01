@@ -52,6 +52,8 @@ docs/                  確定ドキュメント（必要になったら）
   - 公開から 7 日未満のバージョンは入れない（`minimumReleaseAge`）。
   - install script は `allowBuilds` に明示したものだけ許可する。追加は理由を添えてレビューする。
   - GitHub Actions はタグではなくコミット SHA で固定する。
+  - npm 依存は git / URL 指定にしない（registry の integrity 検証と上記ポリシーが効かなくなるため）。
+  - mise のツールは `mise.lock`（URL + チェックサム）で固定する。`mise.toml` の版を変えたら `mise lock --platform linux-x64,macos-arm64,windows-x64` を実行してコミットする。
 - ロジック分離:
   - UI（Astro/HTML/CSS）とドメインロジック（並び替え・グルーピング等）を分離し、後者は `*.ts` に寄せてユニットテスト可能にする。
 - エラー/ログ:
