@@ -53,7 +53,7 @@
 
 - 必須（CI で常に回す）:
   - `lint` / `typecheck` / `test` / `test:e2e` / `build`
-- ユニットテスト（Vitest）:
+- ユニットテスト（`vp test` / Vitest。import は `vite-plus/test`）:
   - 記事一覧ロジック（並び替え/タグ/年月グルーピング）
   - `updatedAt` 表示条件
   - `works` データ形（最低限の型整合）
@@ -102,7 +102,7 @@
 
 - Astro:
   - https://docs.astro.build/
-  - https://v6.docs.astro.build/（v6 beta / upgrade。参照時は版に注意）
+  - https://docs.astro.build/en/guides/upgrade-to/v7/（v7 アップグレード。参照時は版に注意）
 - Cloudflare Pages Functions:
   - https://developers.cloudflare.com/pages/functions/
   - Routing: https://developers.cloudflare.com/pages/functions/routing/
