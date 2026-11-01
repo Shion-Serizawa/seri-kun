@@ -50,6 +50,7 @@ export function remarkMermaid() {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://seri-blog.pages.dev',
   output: 'static',
   // Astro 7 で compressHTML の既定が 'jsx' に変わったため、従来の出力を維持する
   compressHTML: true,
